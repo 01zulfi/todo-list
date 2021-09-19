@@ -1,6 +1,6 @@
-import TodoItem from "./modules/script";
-import './styles/style.css'
+import TodoItem from "./modules/Task.js";
+import {pageLoadContent} from "./modules/InitDisplay";
+import './styles/style.css';
 
-const jog = TodoItem('Jog', 'Jog around park', 'Daily', 'High');
 
-console.log(jog);
+pageLoadContent();
