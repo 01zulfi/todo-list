@@ -1,6 +1,8 @@
-import pageLoadContent from "./modules/InitDisplay";
 import './styles/style.css';
-import bindEvent from "./modules/Task.js";
+import pageLoadContent from "./modules/InitDisplay";
+import bindEventTask from "./modules/Task.js";
+import bindEventProject from "./modules/Project";
 
 pageLoadContent();
-bindEvent();
+bindEventTask();
+bindEventProject();

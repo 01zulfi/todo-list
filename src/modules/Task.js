@@ -6,12 +6,12 @@ const TaskItem = function(title, description, dueDate, priority) {
 }
 
 function addTask() {
-    const task1 = TaskItem('Grocery', 'get groceries', '3/3/3333', 'high');
-    document.body.append(JSON.stringify(task1));
+    const task1 = TaskItem('New task', 'Some desc/notes', '0/0/0000', 'high');
+    document.querySelector('h3').before(JSON.stringify(task1));
 }
 
-function bindEvent() {
-    document.querySelector('button').addEventListener('click', addTask);
+function bindEventTask() {
+    document.querySelectorAll('button')[0].addEventListener('click', addTask);
 }
 
-export default bindEvent;
+export default bindEventTask;
