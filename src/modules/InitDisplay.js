@@ -23,5 +23,4 @@ const initDisplayObject = {
 
 const pageLoadContent = () => initDisplayObject.init();
 
-
-export {pageLoadContent};
+export default pageLoadContent;
