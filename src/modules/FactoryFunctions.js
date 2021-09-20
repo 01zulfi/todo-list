@@ -1,4 +1,4 @@
-const DOMFactory = function(element, attributes) {
+const DOMFactory = function(element, attributes) {  //for simple elements
     const newElement = document.createElement(element);
     for (const attribute in attributes) {
         newElement[attribute] = attributes[attribute];

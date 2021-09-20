@@ -5,13 +5,24 @@ const TaskItem = function(title, description, dueDate, priority) {
                             DueDate(dueDate), Priority(priority))
 }
 
+const taskArray = [];
+
 function addTask() {
-    const task1 = TaskItem('New task', 'Some desc/notes', '0/0/0000', 'high');
-    document.querySelector('h3').before(JSON.stringify(task1));
+    const form = document.querySelector('#form').elements;
+    const task1 = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value);
+    taskArray.push(task1);
+    console.log(task1);
+    console.log(taskArray);
 }
 
-function bindEventTask() {
-    document.querySelectorAll('button')[0].addEventListener('click', addTask);
+
+function bindEvent() {
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addTask();
+    })
 }
 
-export default bindEventTask;
+
+export default bindEvent;
+export {taskArray};
