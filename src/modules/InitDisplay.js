@@ -1,3 +1,5 @@
+import DOMFactory from "./FactoryFunctions";
+
 const initDisplayObject = {
     init: function() {
         this.createElements();
@@ -5,25 +7,20 @@ const initDisplayObject = {
         this.appendContent();
     },
     createElements: function() {
-        this.title = document.createElement('h1');
-        this.task = document.createElement('h2');
-        this.taskAddButton = document.createElement('button');
-        this.project = document.createElement('h3');
-        this.projectAddButton = document.createElement('button');
+        this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
+        this.task = DOMFactory('h2', {className: "taskTitle", textContent: "Task"});
+        this.addTaskButton = DOMFactory('button', {className: "addTaskButton", textContent: "Add Task"});
+        this.project = DOMFactory('h3', {className: "projectTitle", textContent: "Project"});
+        this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
     },
     setContent: function() {
-        this.title.textContent = 'T O D O';
-        this.task.textContent = 'Task';
-        this.taskAddButton.textContent = 'Add Task';
-        this.project.textContent = 'Project';
-        this.projectAddButton.textContent = 'Add Project'
     },
     appendContent: function() {
         document.body.append(this.title);
         document.body.append(this.task);
-        document.body.append(this.taskAddButton);
+        document.body.append(this.addTaskButton);
         document.body.append(this.project);
-        document.body.append(this.projectAddButton);
+        document.body.append(this.addProjectButton);
     },
 };
 
