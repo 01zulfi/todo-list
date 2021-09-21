@@ -22,6 +22,11 @@ const Priority = function(priority) {
     return {priority}
 }
 
+const Recurring = function(recurring) {
+    if (recurring === '') return {recurring: 'no'};
+    return {recurring}
+}
 
-export {Title, Description, DueDate, Priority};
+
+export {Title, Description, DueDate, Priority, Recurring};
 export default DOMFactory;

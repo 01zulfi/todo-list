@@ -2,7 +2,7 @@ import {Title, Description, DueDate, Priority} from './FactoryFunctions.js'
 import { pubsub } from './Pubsub.js';
 
 
-const TaskItem = function(title, description, dueDate, priority) {
+const TaskItem = function(title, description, dueDate, priority, recurring) {
     return Object.assign({}, Title(title), Description(description),
                             DueDate(dueDate), Priority(priority))
 }
