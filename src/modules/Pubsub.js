@@ -6,7 +6,7 @@ const pubsub = {
         }
     },
     subscribe: function(eventName, callback) {
-        if (!Array.isArray(events.eventName)){
+        if (!Array.isArray(this.events.eventName)){
             this.events.eventName = [];
         }
         this.events.eventName.push(callback);
