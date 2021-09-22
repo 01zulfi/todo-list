@@ -12,7 +12,10 @@ const initDisplayObject = {
         this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
         this.task = DOMFactory('h2', {className: "taskTitle", textContent: "Task"});
         this.addTaskButton = DOMFactory('button', {className: "addTaskButton", textContent: "Add Task"});
-        this.form = createTaskForm();   //this.form is a <section> (not the actual form element)
+        this.taskForm = createTaskForm();   //this.taskForm is a <section> (<form> is the first child)
+        this.project = DOMFactory('h2', {className: "projectTitle", textContent: "Project"});
+        this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
+        this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
     setContent: function() {
     },
@@ -20,20 +23,27 @@ const initDisplayObject = {
         document.body.append(this.title);
         document.body.append(this.task);
         document.body.append(this.addTaskButton);
-        document.body.append(this.form);
+        document.body.append(this.taskForm);
+        document.body.append(this.project, this.addProjectButton);
+        document.body.append(this.projectForm);
     },
     bindEvents: function() {
-        this.addTaskButton.addEventListener('click', this.openForm.bind(initDisplayObject));
-        this.form.addEventListener('submit', this.formFunction.bind(initDisplayObject));
+        this.addTaskButton.addEventListener('click', this.openTaskForm.bind(initDisplayObject));
+        this.taskForm.addEventListener('submit', this.formFunction.bind(initDisplayObject));
+        this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
+        this.projectForm.addEventListener('submit', this.formFunction.bind(initDisplayObject));
         document.querySelector("#addTaskChecklistButton").addEventListener('click', this.openChecklist.bind(initDisplayObject));
         document.querySelector("#submitTaskChecklistButton").addEventListener('click', this.closeChecklist.bind(initDisplayObject));
         document.querySelector("#submitTaskChecklistButton").addEventListener('click', this.addChecklistItem);
     },
-    openForm: function() {
-        this.form.style.display = "block";
+    openTaskForm: function() {
+        this.taskForm.style.display = "block";
+    },
+    openProjectForm: function() {
+        this.projectForm.style.display = "block";
     },
     formFunction: function(event) {
-        this.form.firstChild.reset();
+        this.taskForm.firstChild.reset();
         event.preventDefault();
     },
     openChecklist: function() {
@@ -51,12 +61,12 @@ const initDisplayObject = {
 };
 
 function createTaskForm() {
-    const formSection = DOMFactory('section', {className: "formDiv", style: "display: none"});
-    const form = DOMFactory('form', {id: "form"});
+    const formSection = DOMFactory('section', {className: "taskFormDiv", style: "display: none"});
+    const form = DOMFactory('form', {id: "taskForm"});
     const inputTaskTitle = DOMFactory('input', {id: "inputTaskTitle", name: "inputTaskName", type: "text", maxLength: "50",
                                                 placeholder: "task title...",});
     const inputTaskDesc = DOMFactory('textarea', {id: "inputTaskDesc", name: "inputTaskDesc", placeholder: "desc/notes...", });
-    const inputTaskDueDate = DOMFactory('input', {id: "inputTaskDueDate", name: "inputTaskDueDate", type: "date",})
+    const inputTaskDueDate = DOMFactory('input', {id: "inputTaskDueDate", name: "inputTaskDueDate", type: "date",});
     const inputTaskPriority = DOMFactory('input', {id: "inputTaskPriority", name: "inputTaskPriority", type: "text", 
                                                    placeholder: "high/medium/low"});
     const addTaskChecklistButton = DOMFactory('button', {id: "addTaskChecklistButton", type: "button", 
@@ -72,6 +82,23 @@ function createTaskForm() {
     formSection.append(form);
     return formSection
 }
+
+function createProjectForm() {
+    const formSection = DOMFactory('section', {className: "projectFormDiv", style: "display: none"});
+    const form = DOMFactory('form', {id: "projectForm"});
+    const inputProjectTitle = DOMFactory('input', {id: "inputProjectTitle", name: "inputProjectTitle", type: "text",
+                                                   placeholder: "project title..."});
+    const inputProjectDesc = DOMFactory('textarea', {id: "inputProjectDesc", name: "inputProjectDesc",
+                                                     placeholder: "desc/notes..."});
+    const inputProjectDueDate = DOMFactory('input', {id: "inputProjectDueDate", name: "inputProjectDueDate", type: "date"});
+    const submitButton = DOMFactory('button', {id: "submitButton", type: "submit", textContent: "Submit"});
+
+    form.append(inputProjectTitle, inputProjectDesc, inputProjectDueDate, submitButton);
+    formSection.append(form);
+    return formSection;
+}
+
+
 
 const pageLoadContent = () => initDisplayObject.init();
 

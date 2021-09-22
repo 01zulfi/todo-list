@@ -4,7 +4,7 @@ function addProject() {
 }
 
 function bindEventProject() {
-    document.querySelectorAll('button')[1].addEventListener('click', addProject);
+    document.querySelector('.addProjectButton').addEventListener('click', addProject);
 }
 
 export default bindEventProject;
