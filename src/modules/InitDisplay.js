@@ -64,7 +64,7 @@ function createTaskForm() {
     const formSection = DOMFactory('section', {className: "taskFormDiv", style: "display: none"});
     const form = DOMFactory('form', {id: "taskForm"});
     const inputTaskTitle = DOMFactory('input', {id: "inputTaskTitle", name: "inputTaskName", type: "text", maxLength: "50",
-                                                placeholder: "task title...",});
+                                                placeholder: "task title...", required: "true"});
     const inputTaskDesc = DOMFactory('textarea', {id: "inputTaskDesc", name: "inputTaskDesc", placeholder: "desc/notes...", });
     const inputTaskDueDate = DOMFactory('input', {id: "inputTaskDueDate", name: "inputTaskDueDate", type: "date",});
     const inputTaskPriority = DOMFactory('input', {id: "inputTaskPriority", name: "inputTaskPriority", type: "text", 
@@ -87,7 +87,7 @@ function createProjectForm() {
     const formSection = DOMFactory('section', {className: "projectFormDiv", style: "display: none"});
     const form = DOMFactory('form', {id: "projectForm"});
     const inputProjectTitle = DOMFactory('input', {id: "inputProjectTitle", name: "inputProjectTitle", type: "text",
-                                                   placeholder: "project title..."});
+                                                   placeholder: "project title...", required: "true"});
     const inputProjectDesc = DOMFactory('textarea', {id: "inputProjectDesc", name: "inputProjectDesc",
                                                      placeholder: "desc/notes..."});
     const inputProjectDueDate = DOMFactory('input', {id: "inputProjectDueDate", name: "inputProjectDueDate", type: "date"});

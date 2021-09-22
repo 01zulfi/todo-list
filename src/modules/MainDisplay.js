@@ -12,9 +12,9 @@ function log(data) {
 }
 
 function displayProjects(projects) {        //  NEED A CHECK FOR DUPLICATE PROJECTS IN Project.js
-    projects = projects.filter(project => {
-        if (project.title === "") return false
-        if (document.querySelector(`#${project.title}`)) return false
+    projects = projects.filter(project => { //  filter process to be written in Project.js
+        if (project.title === "") return false  
+        if (document.getElementById(`${project.title}`)) return false
         return true
     })
     for (const project of projects) {
