@@ -36,5 +36,10 @@ const TaskItem = function(title, description, dueDate, priority) {
                             DueDate(dueDate), Priority(priority))
 }
 
+const ProjectItem = function(title, description, dueDate) {
+    return Object.assign({}, Title(title), Description(description), DueDate(dueDate))
+}
+
 export {TaskItem};
+export {ProjectItem};
 export default DOMFactory;

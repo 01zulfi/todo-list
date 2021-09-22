@@ -4,7 +4,7 @@ import { pubsub } from './Pubsub.js';
 const taskArray = [];
 
 function addTask() {
-    const form = document.querySelector('#form').elements;
+    const form = document.querySelector('#taskForm').elements;
     const newTask = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                             form["inputTaskPriority"].value);
     newTask.checklist = checklist.slice();
@@ -25,7 +25,7 @@ function addChecklist(item) {
 }
 
 function bindEvent() {
-    document.querySelector('form').addEventListener('submit', (e) => {
+    document.querySelector('#taskForm').addEventListener('submit', (e) => {
         addTask();
     })
 }
