@@ -1,9 +1,11 @@
 import { pubsub } from "./Pubsub.js";
 
-pubsub.subscribe('addTask', log);
-function log(tasks) {
-    if (tasks === undefined) return
-    console.log(tasks)
+function getData() {
+    pubsub.subscribe('addTask', log);
 }
 
-export default log;
+function log(tasks) {
+    console.log(tasks);
+}
+
+export default getData;

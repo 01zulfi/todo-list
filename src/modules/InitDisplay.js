@@ -11,7 +11,7 @@ const initDisplayObject = {
         this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
         this.task = DOMFactory('h2', {className: "taskTitle", textContent: "Task"});
         this.addTaskButton = DOMFactory('button', {className: "addTaskButton", textContent: "Add Task"});
-        this.form = createTaskForm();   //formSection: not the actual form element
+        this.form = createTaskForm();   //this.form is a section (not the actual form element)
     },
     setContent: function() {
     },
@@ -33,7 +33,6 @@ const initDisplayObject = {
         event.preventDefault();
     },
 };
-
 
 function createTaskForm() {
     const formSection = DOMFactory('section', {className: "formDiv", style: "display: none"});

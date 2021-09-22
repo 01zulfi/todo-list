@@ -27,6 +27,14 @@ const Recurring = function(recurring) {
     return {recurring}
 }
 
+const CheckList = function(checklist) {
+    return {checklist}  //array since spread operator used in TaskItem
+}
 
-export {Title, Description, DueDate, Priority, Recurring};
+const TaskItem = function(title, description, dueDate, priority, ...checklist) {
+    return Object.assign({}, Title(title), Description(description),
+                            DueDate(dueDate), Priority(priority), CheckList(checklist))
+}
+
+export {TaskItem};
 export default DOMFactory;
