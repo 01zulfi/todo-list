@@ -4,7 +4,7 @@ import { pubsub } from './Pubsub.js';
 const taskArray = [];
 
 function addTask() {
-    const form = document.querySelector('#taskForm').elements;
+    const form = document.querySelector('#formTask').elements;
     const newTask = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                             form["inputTaskPriority"].value);
     newTask.checklist = checklist.slice();
@@ -43,7 +43,7 @@ function checkDuplicateTask() {
 
 
 function bindEvent() {
-    document.querySelector('#taskForm').addEventListener('submit', (e) => {
+    document.querySelector('#formTask').addEventListener('submit', (e) => {
         addTask();
     })
 }

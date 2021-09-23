@@ -10,6 +10,11 @@ const Title = function(title) {
     return {title}
 }
 
+const FilteredTitle = function(title) {
+    const filteredTitle = title.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").replace(/\s+/g, '');
+    return {filteredTitle}
+}
+
 const Description = function(description) {
     return {description}
 }
@@ -32,12 +37,12 @@ const CheckList = function(checklist) {
 }
 
 const TaskItem = function(title, description, dueDate, priority) {
-    return Object.assign({}, Title(title), Description(description),
+    return Object.assign({}, Title(title), FilteredTitle(title), Description(description),
                             DueDate(dueDate), Priority(priority))
 }
 
 const ProjectItem = function(title, description, dueDate) {
-    return Object.assign({}, Title(title), Description(description), DueDate(dueDate))
+    return Object.assign({}, Title(title), FilteredTitle(title), Description(description), DueDate(dueDate))
 }
 
 export {TaskItem};

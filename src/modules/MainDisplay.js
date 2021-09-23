@@ -14,19 +14,24 @@ function log(data) {
 
 function displayProjects(projects) {  
     projects = projects.filter(project => { 
-        if (document.getElementById(`${project.title}`)) return false
+        if (document.getElementById(`${project.filteredTitle}`)) return false
         return true
     })
     for (const project of projects) {
-        const projectName = DOMFactory('h3', {id: `${project.title}`, className: "projectName",
+        const projectName = DOMFactory('h3', {id: `${project.filteredTitle}`, className: "projectName",
                                               textContent: `${project.title}`});
-        const addTaskInProjectButton = DOMFactory('button', {id: `${project.title} button`, 
-                                                             textContent: "Add Task in Project"})
+        const addTaskInProjectButton = DOMFactory('button', {id: `${project.filteredTitle} button`, 
+                                                             textContent: `Add Task in ${project.title}`})
+        const taskInProjectForm = createTaskForm(`TaskIn${project.filteredTitle}`);
+        taskInProjectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            e.target.reset();
+        })
         addTaskInProjectButton.addEventListener('click', () => {
-            document.querySelector('.sectionTaskInProjectForm').style.display = "block";
+            taskInProjectForm.style.display = "block";
         })                                              
         document.body.append(projectName, addTaskInProjectButton);
-        document.body.append(createTaskForm("TaskInProject"));
+        document.body.append(taskInProjectForm);
     }
 }
 

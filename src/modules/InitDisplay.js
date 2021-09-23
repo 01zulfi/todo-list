@@ -65,8 +65,8 @@ const initDisplayObject = {
 };
 
 function createTaskForm(version) {
-    const formSection = DOMFactory('section', {className: `section${version}Form`, style: "display: none"});
-    const form = DOMFactory('form', {id: "taskForm"});
+    const formSection = DOMFactory('section', {id: `section${version}Form`, style: "display: none"});
+    const form = DOMFactory('form', {id: `form${version}`});
     const inputTaskTitle = DOMFactory('input', {id: `input${version}Title`, name: `input${version}Name`, type: "text", maxLength: "50",
                                                 placeholder: "task title...", required: "true"});
     const inputTaskDesc = DOMFactory('textarea', {id: `input${version}Desc`, name: `input${version}Desc`, placeholder: "desc/notes...", });
