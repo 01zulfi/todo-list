@@ -12,7 +12,7 @@ const initDisplayObject = {
         this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
         this.task = DOMFactory('h2', {className: "taskTitle", textContent: "Task"});
         this.addTaskButton = DOMFactory('button', {className: "addTaskButton", textContent: "Add Task"});
-        this.taskForm = createTaskForm();   //this.taskForm is a <section> (<form> is the first child)
+        this.taskForm = createTaskForm("Task");   //this.taskForm is a <section> (<form> is the first child)
         this.project = DOMFactory('h2', {className: "projectTitle", textContent: "Project"});
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
         this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
@@ -43,8 +43,12 @@ const initDisplayObject = {
         this.projectForm.style.display = "block";
     },
     formFunction: function(event) {
-        this.taskForm.firstChild.reset();
         event.preventDefault();
+        if (event.target.id === "taskForm") {
+            this.taskForm.firstChild.reset();
+        } else {
+            this.projectForm.firstChild.reset();
+        } 
     },
     openChecklist: function() {
         document.querySelector('#inputTaskChecklist').style.display = "block";
@@ -60,20 +64,20 @@ const initDisplayObject = {
     }
 };
 
-function createTaskForm() {
-    const formSection = DOMFactory('section', {className: "taskFormDiv", style: "display: none"});
+function createTaskForm(version) {
+    const formSection = DOMFactory('section', {className: `section${version}Form`, style: "display: none"});
     const form = DOMFactory('form', {id: "taskForm"});
-    const inputTaskTitle = DOMFactory('input', {id: "inputTaskTitle", name: "inputTaskName", type: "text", maxLength: "50",
+    const inputTaskTitle = DOMFactory('input', {id: `input${version}Title`, name: `input${version}Name`, type: "text", maxLength: "50",
                                                 placeholder: "task title...", required: "true"});
-    const inputTaskDesc = DOMFactory('textarea', {id: "inputTaskDesc", name: "inputTaskDesc", placeholder: "desc/notes...", });
-    const inputTaskDueDate = DOMFactory('input', {id: "inputTaskDueDate", name: "inputTaskDueDate", type: "date",});
-    const inputTaskPriority = DOMFactory('input', {id: "inputTaskPriority", name: "inputTaskPriority", type: "text", 
+    const inputTaskDesc = DOMFactory('textarea', {id: `input${version}Desc`, name: `input${version}Desc`, placeholder: "desc/notes...", });
+    const inputTaskDueDate = DOMFactory('input', {id: `input${version}DueDate`, name: `input${version}DueDate`, type: "date",});
+    const inputTaskPriority = DOMFactory('input', {id: `input${version}Priority`, name: `input${version}Priority`, type: "text", 
                                                    placeholder: "high/medium/low"});
-    const addTaskChecklistButton = DOMFactory('button', {id: "addTaskChecklistButton", type: "button", 
+    const addTaskChecklistButton = DOMFactory('button', {id: `add${version}ChecklistButton`, type: "button", 
                                                          textContent: "Add Checklist"});
-    const inputTaskChecklist = DOMFactory('input', {id: "inputTaskChecklist", name: "inputTaskChecklist", type: "text",
+    const inputTaskChecklist = DOMFactory('input', {id: `input${version}Checklist`, name: `input${version}Checklist`, type: "text",
                                                     placeholder: "enter list here...", style: "display: none;"})
-    const submitTaskChecklistButton = DOMFactory('button', {id: "submitTaskChecklistButton", type: "button", 
+    const submitTaskChecklistButton = DOMFactory('button', {id: `submit${version}ChecklistButton`, type: "button", 
                                                          textContent: "Add", style: "display: none;"});
     const submitButton = DOMFactory('button', {id: "submitButton", type: "submit", textContent: "Submit"});
 
@@ -103,3 +107,4 @@ function createProjectForm() {
 const pageLoadContent = () => initDisplayObject.init();
 
 export default pageLoadContent;
+export {createTaskForm};

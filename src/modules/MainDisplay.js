@@ -1,4 +1,5 @@
 import DOMFactory from "./FactoryFunctions.js";
+import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
 
 function getData() {
@@ -20,9 +21,16 @@ function displayProjects(projects) {
         const projectName = DOMFactory('h3', {id: `${project.title}`, className: "projectName",
                                               textContent: `${project.title}`});
         const addTaskInProjectButton = DOMFactory('button', {id: `${project.title} button`, 
-                                                             textContent: "Add Task in Project"});
+                                                             textContent: "Add Task in Project"})
+        addTaskInProjectButton.addEventListener('click', () => {
+            document.querySelector('.sectionTaskInProjectForm').style.display = "block";
+        })                                              
         document.body.append(projectName, addTaskInProjectButton);
+        document.body.append(createTaskForm("TaskInProject"));
     }
 }
+
+
+
 
 export default getData;
