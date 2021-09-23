@@ -11,9 +11,8 @@ function log(data) {
     console.log(data);
 }
 
-function displayProjects(projects) {        //  NEED A CHECK FOR DUPLICATE PROJECTS IN Project.js
-    projects = projects.filter(project => { //  filter process to be written in Project.js
-        if (project.title === "") return false  
+function displayProjects(projects) {  
+    projects = projects.filter(project => { 
         if (document.getElementById(`${project.title}`)) return false
         return true
     })
