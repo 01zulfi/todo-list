@@ -3,11 +3,11 @@ import { pubsub } from './Pubsub.js';
 
 const taskArray = [];
 
-pubsub.subscribe('addTask', createTask)
+pubsub.subscribe('addTask', createTask);
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                             form["inputTaskPriority"].value);
-    pushItemsInChecklist(form["inputTaskChecklist"], task.checklist);
+    pushItemsInChecklist(document.querySelectorAll('.inputChecklist'), task.checklist);
     setTaskIndex(task);
     pushTaskInTaskArray(task);
     pubsub.publish('addTaskDOM', taskArray);

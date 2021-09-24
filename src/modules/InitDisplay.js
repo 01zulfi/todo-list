@@ -29,12 +29,7 @@ const initDisplayObject = {
     },
     bindEvents: function() {
         this.addTaskButton.addEventListener('click', this.openTaskForm.bind(initDisplayObject));
-        //this.taskForm.addEventListener('submit', this.formFunction.bind(initDisplayObject));
         this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
-        this.projectForm.addEventListener('submit', this.formFunction.bind(initDisplayObject));
-        //document.querySelector("#addTaskChecklistButton").addEventListener('click', this.openChecklist.bind(initDisplayObject));
-        //document.querySelector("#submitTaskChecklistButton").addEventListener('click', this.closeChecklist.bind(initDisplayObject));
-        //document.querySelector("#submitTaskChecklistButton").addEventListener('click', this.addChecklistItem);
     },
     openTaskForm: function() {
         this.taskForm.style.display = "block";
@@ -42,26 +37,6 @@ const initDisplayObject = {
     openProjectForm: function() {
         this.projectForm.style.display = "block";
     },
-    formFunction: function(event) {
-        event.preventDefault();
-        if (event.target.id === "formTask") {
-            this.taskForm.firstChild.reset();
-        } else {
-            this.projectForm.firstChild.reset();
-        } 
-    },
-    openChecklist: function() {
-        document.querySelector('#inputTaskChecklist').style.display = "block";
-        document.querySelector('#submitTaskChecklistButton').style.display = "block";
-    },
-    closeChecklist: function() {
-        document.querySelector('#inputTaskChecklist').style.display = "none";
-        document.querySelector('#submitTaskChecklistButton').style.display = "none";
-    },
-    addChecklistItem: function() {
-        pubsub.publish('addChecklist', document.querySelector('#inputTaskChecklist').value);
-        document.querySelector('#inputTaskChecklist').value = '';
-    }
 };
 
 function createTaskForm(version) {
@@ -106,6 +81,7 @@ function createTaskForm(version) {
         formFunction: function(event) {
             event.preventDefault();
             this.form.reset();
+            formSection.style.display = "none";
         },
         deleteChecklistInputs: function() {
             this.checkListInputs = document.querySelectorAll('.inputChecklist');
@@ -124,17 +100,41 @@ function createTaskForm(version) {
 }
 
 function createProjectForm() {
-    const formSection = DOMFactory('section', {className: "projectFormDiv", style: "display: none"});
-    const form = DOMFactory('form', {id: "projectForm"});
-    const inputProjectTitle = DOMFactory('input', {id: "inputProjectTitle", name: "inputProjectTitle", type: "text",
-                                                   placeholder: "project title...", required: "true"});
-    const inputProjectDesc = DOMFactory('textarea', {id: "inputProjectDesc", name: "inputProjectDesc",
-                                                     placeholder: "desc/notes..."});
-    const inputProjectDueDate = DOMFactory('input', {id: "inputProjectDueDate", name: "inputProjectDueDate", type: "date"});
-    const submitButton = DOMFactory('button', {id: "submitButton", type: "submit", textContent: "Submit"});
-
-    form.append(inputProjectTitle, inputProjectDesc, inputProjectDueDate, submitButton);
-    formSection.append(form);
+    const formSection = DOMFactory('section', {className: "projectFormSection", style: "display: none"});
+    const formObject = {
+        init: function() {
+            this.createElements();
+            this.appendElements();
+            this.bindEvents();
+        },
+        createElements: function() {
+            this.form = DOMFactory('form', {id: "projectForm"});
+            this.inputProjectTitle = DOMFactory('input', {id: "inputProjectTitle", name: "inputProjectTitle", type: "text",
+                                                          placeholder: "project title...", required: "true"});
+            this.inputProjectDesc = DOMFactory('textarea', {id: "inputProjectDesc", name: "inputProjectDesc",
+                                                            placeholder: "desc/notes..."});
+            this.inputProjectDueDate = DOMFactory('input', {id: "inputProjectDueDate", name: "inputProjectDueDate",
+                                                            type: "date"});
+            this.submitButton = DOMFactory('button', {id: "submitButton", type: "submit", textContent: "Submit"});
+        },
+        appendElements: function() {        
+            this.form.append(this.inputProjectTitle, this.inputProjectDesc, this.inputProjectDueDate, this.submitButton);
+            formSection.append(this.form);
+        },
+        bindEvents: function() {
+            this.form.addEventListener('submit', this.publishData.bind(formObject));
+            this.form.addEventListener('submit', this.formFunction.bind(formObject))
+        },
+        publishData: function() {
+            pubsub.publish('addProject', this.form.elements);
+        },
+        formFunction: function(event) {
+            event.preventDefault();
+            this.form.reset();
+            formSection.style.display = "none";            
+        }
+    }
+    formObject.init();
     return formSection;
 }
 

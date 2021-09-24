@@ -36,13 +36,18 @@ const Checklist = function() {
     return {checklist: []}
 }
 
+const TasksInProject = function() {
+    return {tasks: []}
+}
+
 const TaskItem = function(title, description, dueDate, priority) {
     return Object.assign({}, Title(title), FilteredTitle(title), Description(description),
                              DueDate(dueDate), Priority(priority), Checklist())
 }
 
 const ProjectItem = function(title, description, dueDate) {
-    return Object.assign({}, Title(title), FilteredTitle(title), Description(description), DueDate(dueDate))
+    return Object.assign({}, Title(title), FilteredTitle(title), Description(description), DueDate(dueDate),
+                             TasksInProject())
 }
 
 export {TaskItem};

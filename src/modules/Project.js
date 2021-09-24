@@ -6,13 +6,12 @@ import { TaskItem } from "./FactoryFunctions";
 const projects = [];
 const checklist = [];
 
-function addProject() {
-    const form = document.querySelector('#projectForm').elements;
+pubsub.subscribe('addProject', createProject)
+function createProject(form) {
     const newProject = ProjectItem(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
                                    form['inputProjectDueDate'].value);
-    newProject.tasks = [];
     projects.push(newProject);
-    pubsub.publish('addProject', projects);
+    pubsub.publish('addProjectDOM', projects);
 }
 pubsub.subscribe('addChecklistInTaskInProject', addChecklistInTaskInProject);
 function addChecklistInTaskInProject(item) {
@@ -57,9 +56,4 @@ function checkDuplicateProject() {
     })
 }
 
-function bindEventProject() {
-    document.querySelector('#projectForm').addEventListener('submit', addProject);
-}
-
-export default bindEventProject;
 export {checkDuplicateProject};

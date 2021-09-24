@@ -11,8 +11,8 @@ function getData() {
     pubsub.subscribe('updateThisTask', updateTaskFormView);
     pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
     pubsub.subscribe('updateTaskDOM', displayTasks);
-    pubsub.subscribe('addProject', log);
-    pubsub.subscribe('addProject', displayProjects)
+    pubsub.subscribe('addProjectDOM', log);
+    pubsub.subscribe('addProjectDOM', displayProjects)
 }
 
 function log(data) {
