@@ -13,6 +13,21 @@ function addTask() {
     checklist.splice(0);
 }
 
+pubsub.subscribe('deleteTask', deleteTask);
+function deleteTask(deletedTask) {
+    const filtered = [];
+    for (const task of taskArray) {
+        if (!deletedTask.includes(task.filteredTitle)) {
+            filtered.push(task);
+        }
+        else {
+            pubsub.publish('deleteTaskDOM', task);
+        }
+    }
+    taskArray.splice(0).concat(filtered);
+}
+
+
 const checklist = [];
 pubsub.subscribe('addChecklist', addChecklist);
 function addChecklist(item) {

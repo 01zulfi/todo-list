@@ -44,7 +44,7 @@ const initDisplayObject = {
     },
     formFunction: function(event) {
         event.preventDefault();
-        if (event.target.id === "taskForm") {
+        if (event.target.id === "formTask") {
             this.taskForm.firstChild.reset();
         } else {
             this.projectForm.firstChild.reset();
