@@ -8,6 +8,7 @@ function addTask() {
     const newTask = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                             form["inputTaskPriority"].value);
     newTask.checklist = checklist.slice();
+    newTask.index = taskArray.length;
     taskArray.push(newTask);
     pubsub.publish('addTask', taskArray);
     checklist.splice(0);
@@ -24,7 +25,27 @@ function deleteTask(deletedTask) {
             pubsub.publish('deleteTaskDOM', task);
         }
     }
-    taskArray.splice(0).concat(filtered);
+    taskArray.splice(0);
+    taskArray.push(...filtered);
+    console.log(taskArray);
+}
+pubsub.subscribe('requireTask', sendRequiredTask);
+function sendRequiredTask(requiredTask) {
+    for (const task of taskArray) {
+        if (requiredTask.includes(task.filteredTitle)) {
+            pubsub.publish('updateThisTask', task);
+            break
+        }
+    }
+}
+
+function updateTask(task, form) {
+    const data = form.firstChild;
+    const updatedTask = TaskItem(data[0].value, data[1].value, data[2].value, data[3].value);
+    updatedTask.index = task.index;
+    taskArray.splice(task.index, 1, updatedTask);
+    pubsub.publish('updateTaskDOM', taskArray);
+    console.log(taskArray);
 }
 
 
@@ -64,4 +85,5 @@ function bindEvent() {
 }
 
 export default bindEvent;
-export {checkDuplicateTask}
+export {checkDuplicateTask};
+export {updateTask};
