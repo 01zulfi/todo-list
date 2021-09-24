@@ -4,7 +4,6 @@ import { TaskItem } from "./FactoryFunctions";
 
 
 const projects = [];
-const checklist = [];
 
 pubsub.subscribe('addProject', createProject)
 function createProject(form) {
@@ -24,18 +23,14 @@ function addChecklistInTaskInProject(item) {
 }
 
 pubsub.subscribe('addTaskInProject', addTaskInProject);
-function addTaskInProject(form) {
-    const data = form.firstChild.elements;
+function addTaskInProject(data) {
     const newTask = TaskItem(data[0].value, data[1].value, data[2].value, data[3].value);
-    newTask.checklist = [];
-    newTask.checklist = checklist.slice();
     for (const project of projects) {
         if (form.className.includes(project.filteredTitle)) {
             project.tasks.push(newTask);
         }
     }
-    console.log(projects)
-    checklist.splice(0);
+    console.log(projects);
 }
 
 

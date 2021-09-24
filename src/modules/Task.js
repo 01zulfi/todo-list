@@ -6,8 +6,7 @@ const taskArray = [];
 pubsub.subscribe('addTask', createTask);
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
-                            form["inputTaskPriority"].value);
-    pushItemsInChecklist(document.querySelectorAll('.inputChecklist'), task.checklist);
+                            form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
     setTaskIndex(task);
     pushTaskInTaskArray(task);
     pubsub.publish('addTaskDOM', taskArray);
@@ -19,17 +18,6 @@ function pushTaskInTaskArray(task) {
 
 function setTaskIndex(task) {
     task.index = taskArray.length;
-}
-
-function pushItemsInChecklist(items, checklist) {
-    const itemsArray = Array.from(items);
-    for (const item of itemsArray) {
-        const checklistObj = {
-            content: item.value,
-            checked: false,
-        }
-        checklist.push(checklistObj);
-    }
 }
 
 pubsub.subscribe('deleteTask', deleteTask);

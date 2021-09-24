@@ -20,14 +20,14 @@ function log(data) {
 }
 
 function displayTasks(tasks) {
-    deleteTasks();
+    deleteAllTasks();
     const projectTitle = document.querySelector('.projectTitle');
     for (const task of tasks) {
         document.body.insertBefore(createTaskCard(task), projectTitle)
     }
 }
 
-function deleteTasks() {
+function deleteAllTasks() {
     const taskDivNodeList = document.querySelectorAll('.taskDiv');
     if (taskDivNodeList) {
         taskDivNodeList.forEach(taskDiv => taskDiv.remove());
@@ -114,29 +114,29 @@ function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME 
         const addTaskInProjectButton = DOMFactory('button', {id: `${project.filteredTitle} button`,
                                                              textContent: `Add Task in ${project.title}`})
         const taskInProjectForm = createTaskForm(`TaskIn${project.filteredTitle}`);
-        taskInProjectForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            //pubsub.publish('addTaskInProject', taskInProjectForm)
-            e.target.reset();
+        // taskInProjectForm.addEventListener('submit', (e) => {
+        //     e.preventDefault();
+        //     //pubsub.publish('addTaskInProject', taskInProjectForm)
+        //     e.target.reset();
             
-        })
+        // })
         addTaskInProjectButton.addEventListener('click', () => {
             taskInProjectForm.style.display = "block";
         })       
                                        
         document.body.append(projectName, addTaskInProjectButton);
         document.body.append(taskInProjectForm);
-        document.getElementById(`addTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
-            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "block";
-            document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "block";
-        })
-        document.getElementById(`submitTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
-            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "none";
-            document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "none";
-            pubsub.publish('addChecklistInTaskInProject',
-                            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value);
-            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value = '';
-        })
+        // document.getElementById(`addTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
+        //     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "block";
+        //     document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "block";
+        // })
+        // document.getElementById(`submitTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
+        //     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "none";
+        //     document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "none";
+        //     pubsub.publish('addChecklistInTaskInProject',
+        //                     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value);
+        //     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value = '';
+        // })
     }
 }
 

@@ -32,17 +32,27 @@ const Recurring = function(recurring) {
     return {recurring}
 }
 
-const Checklist = function() {
-    return {checklist: []}
+const Checklist = function(items) {
+    const checklist = [];
+    const itemsArray = Array.from(items);
+    for (const item of itemsArray) {
+        if (item.value === "") continue
+        const checklistObj = {
+            content: item.value,
+            checked: false,
+        }
+        checklist.push(checklistObj);
+    }
+    return {checklist}
 }
 
 const TasksInProject = function() {
     return {tasks: []}
 }
 
-const TaskItem = function(title, description, dueDate, priority) {
+const TaskItem = function(title, description, dueDate, priority, checkListItems) {
     return Object.assign({}, Title(title), FilteredTitle(title), Description(description),
-                             DueDate(dueDate), Priority(priority), Checklist())
+                             DueDate(dueDate), Priority(priority), Checklist(checkListItems))
 }
 
 const ProjectItem = function(title, description, dueDate) {
