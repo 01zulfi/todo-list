@@ -2,37 +2,29 @@ import { ProjectItem } from "./FactoryFunctions";
 import { pubsub } from "./Pubsub";
 import { TaskItem } from "./FactoryFunctions";
 
-
 const projects = [];
 
 pubsub.subscribe('addProject', createProject)
 function createProject(form) {
-    const newProject = ProjectItem(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
+    const project = ProjectItem(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
                                    form['inputProjectDueDate'].value);
-    projects.push(newProject);
+    projects.push(project);
     pubsub.publish('addProjectDOM', projects);
-}
-pubsub.subscribe('addChecklistInTaskInProject', addChecklistInTaskInProject);
-function addChecklistInTaskInProject(item) {
-    if (!item) return
-    const itemObj = {
-        content: item,
-        checked: false,
-    }
-    checklist.push(itemObj);
 }
 
 pubsub.subscribe('addTaskInProject', addTaskInProject);
-function addTaskInProject(data) {
-    const newTask = TaskItem(data[0].value, data[1].value, data[2].value, data[3].value);
+function addTaskInProject(form) {
+    const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value,
+                             form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
     for (const project of projects) {
-        if (form.className.includes(project.filteredTitle)) {
-            project.tasks.push(newTask);
+        if (form[0].parentNode.id.includes(project.filteredTitle)) {
+            project.tasks.push(task);
+            break;
         }
     }
-    console.log(projects);
+    pubsub.publish('addTaskInProjectDOM', projects);
+    console.dir(projects);
 }
-
 
 function checkDuplicateProject() {
     document.querySelector('#inputProjectTitle').addEventListener('input', (e) => {

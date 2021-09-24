@@ -12,11 +12,16 @@ function getData() {
     pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
     pubsub.subscribe('updateTaskDOM', displayTasks);
     pubsub.subscribe('addProjectDOM', log);
-    pubsub.subscribe('addProjectDOM', displayProjects)
+    pubsub.subscribe('addProjectDOM', displayProjects);
+    pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
 }
 
 function log(data) {
     console.log(data);
+}
+
+function displayTaskInProject() {       // INCOMPLETE
+
 }
 
 function displayTasks(tasks) {
@@ -80,16 +85,6 @@ function updateTaskFormSubmit(task) {
     })
 }
 
-// function updateTaskDOM(updatedTask, task) {
-//     const taskDivNodeList = Array.from(document.querySelector('.taskDiv'));
-//     for (const taskDiv of taskDivNodeList) {
-//         if (taskDiv.id.includes(task.filteredTitle)) {
-
-//         }
-//     }
-// }
-
-
 function deleteTaskDOM(task) {
     const taskDivNodeList = Array.from(document.querySelectorAll('.taskDiv'));
     for (const taskDiv of taskDivNodeList) {
@@ -99,9 +94,6 @@ function deleteTaskDOM(task) {
         }
     }
 }
-
-
-
 
 function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME ALPHABETS DIFFERENT PUNCTUATION
     projects = projects.filter(project => { 
@@ -114,33 +106,12 @@ function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME 
         const addTaskInProjectButton = DOMFactory('button', {id: `${project.filteredTitle} button`,
                                                              textContent: `Add Task in ${project.title}`})
         const taskInProjectForm = createTaskForm(`TaskIn${project.filteredTitle}`);
-        // taskInProjectForm.addEventListener('submit', (e) => {
-        //     e.preventDefault();
-        //     //pubsub.publish('addTaskInProject', taskInProjectForm)
-        //     e.target.reset();
-            
-        // })
         addTaskInProjectButton.addEventListener('click', () => {
             taskInProjectForm.style.display = "block";
-        })       
-                                       
+        })                                     
         document.body.append(projectName, addTaskInProjectButton);
         document.body.append(taskInProjectForm);
-        // document.getElementById(`addTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
-        //     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "block";
-        //     document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "block";
-        // })
-        // document.getElementById(`submitTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
-        //     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "none";
-        //     document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "none";
-        //     pubsub.publish('addChecklistInTaskInProject',
-        //                     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value);
-        //     document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value = '';
-        // })
     }
 }
-
-
-
 
 export default getData;

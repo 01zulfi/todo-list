@@ -49,14 +49,14 @@ function createTaskForm(version) {
         },
         createElements: function() {
             this.form = DOMFactory('form', {id: `form${version}`});
-            this.inputTaskTitle = DOMFactory('input', {id: `input${version}Title`, name: `input${version}Name`,
+            this.inputTaskTitle = DOMFactory('input', {id: `input${version}Title`, name: `inputTaskName`,
                                                        type: "text", maxLength: "50", placeholder: "task title...",
                                                        required: "true"});
-            this.inputTaskDesc = DOMFactory('textarea', {id: `input${version}Desc`, name: `input${version}Desc`,
+            this.inputTaskDesc = DOMFactory('textarea', {id: `input${version}Desc`, name: `inputTaskDesc`,
                                                          placeholder: "desc/notes...", });
-            this.inputTaskDueDate = DOMFactory('input', {id: `input${version}DueDate`, name: `input${version}DueDate`,
+            this.inputTaskDueDate = DOMFactory('input', {id: `input${version}DueDate`, name: `inputTaskDueDate`,
                                                          type: "date",});
-            this.inputTaskPriority = DOMFactory('input', {id: `input${version}Priority`, name: `input${version}Priority`, type: "text", 
+            this.inputTaskPriority = DOMFactory('input', {id: `input${version}Priority`, name: `inputTaskPriority`, type: "text", 
                                                           placeholder: "high/medium/low"});
             this.addTaskChecklistButton = DOMFactory('button', {id: `add${version}ChecklistButton`, type: "button", 
                                                                 textContent: "Add Checklist"});
