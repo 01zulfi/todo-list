@@ -20,12 +20,14 @@ function displayProjects(projects) {
     for (const project of projects) {
         const projectName = DOMFactory('h3', {id: `${project.filteredTitle}`, className: "projectName",
                                               textContent: `${project.title}`});
-        const addTaskInProjectButton = DOMFactory('button', {id: `${project.filteredTitle} button`, 
+        const addTaskInProjectButton = DOMFactory('button', {id: `${project.filteredTitle} button`,
                                                              textContent: `Add Task in ${project.title}`})
         const taskInProjectForm = createTaskForm(`TaskIn${project.filteredTitle}`);
         taskInProjectForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            pubsub.publish('addTaskInProject', taskInProjectForm)
             e.target.reset();
+            
         })
         addTaskInProjectButton.addEventListener('click', () => {
             taskInProjectForm.style.display = "block";
