@@ -3,15 +3,33 @@ import { pubsub } from './Pubsub.js';
 
 const taskArray = [];
 
-function addTask() {
-    const form = document.querySelector('#formTask').elements;
-    const newTask = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
+pubsub.subscribe('addTask', createTask)
+function createTask(form) {
+    const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                             form["inputTaskPriority"].value);
-    newTask.checklist = checklist.slice();
-    newTask.index = taskArray.length;
-    taskArray.push(newTask);
-    pubsub.publish('addTask', taskArray);
-    checklist.splice(0);
+    pushItemsInChecklist(form["inputTaskChecklist"], task.checklist);
+    setTaskIndex(task);
+    pushTaskInTaskArray(task);
+    pubsub.publish('addTaskDOM', taskArray);
+}
+
+function pushTaskInTaskArray(task) {
+    taskArray.push(task);
+}
+
+function setTaskIndex(task) {
+    task.index = taskArray.length;
+}
+
+function pushItemsInChecklist(items, checklist) {
+    const itemsArray = Array.from(items);
+    for (const item of itemsArray) {
+        const checklistObj = {
+            content: item.value,
+            checked: false,
+        }
+        checklist.push(checklistObj);
+    }
 }
 
 pubsub.subscribe('deleteTask', deleteTask);
@@ -48,18 +66,6 @@ function updateTask(task, form) {
     console.log(taskArray);
 }
 
-
-const checklist = [];
-pubsub.subscribe('addChecklist', addChecklist);
-function addChecklist(item) {
-    if (!item) return
-    const itemObj = {
-        content: item,
-        checked: false,
-    }
-    checklist.push(itemObj);
-}
-
 function checkDuplicateTask() {
     document.querySelector('#inputTaskTitle').addEventListener('input', (e) => {
         let count = 0;  //to remove custom validation message when not required
@@ -77,13 +83,5 @@ function checkDuplicateTask() {
     })
 }
 
-
-function bindEvent() {
-    document.querySelector('#formTask').addEventListener('submit', (e) => {
-        addTask();
-    })
-}
-
-export default bindEvent;
 export {checkDuplicateTask};
 export {updateTask};

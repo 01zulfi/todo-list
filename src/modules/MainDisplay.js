@@ -5,8 +5,8 @@ import { updateTask } from "./Task.js";
 
 
 function getData() {
-    pubsub.subscribe('addTask', log);
-    pubsub.subscribe('addTask', displayTasks);
+    pubsub.subscribe('addTaskDOM', log);
+    pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('deleteTaskDOM', deleteTaskDOM);
     pubsub.subscribe('updateThisTask', updateTaskFormView);
     pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
@@ -108,7 +108,7 @@ function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME 
         const taskInProjectForm = createTaskForm(`TaskIn${project.filteredTitle}`);
         taskInProjectForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            pubsub.publish('addTaskInProject', taskInProjectForm)
+            //pubsub.publish('addTaskInProject', taskInProjectForm)
             e.target.reset();
             
         })

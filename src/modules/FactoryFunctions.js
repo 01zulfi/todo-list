@@ -32,13 +32,13 @@ const Recurring = function(recurring) {
     return {recurring}
 }
 
-const CheckList = function(checklist) {
-    return {checklist}  //array since spread operator used in TaskItem
+const Checklist = function() {
+    return {checklist: []}
 }
 
 const TaskItem = function(title, description, dueDate, priority) {
     return Object.assign({}, Title(title), FilteredTitle(title), Description(description),
-                            DueDate(dueDate), Priority(priority))
+                             DueDate(dueDate), Priority(priority), Checklist())
 }
 
 const ProjectItem = function(title, description, dueDate) {
