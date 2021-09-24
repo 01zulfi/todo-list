@@ -55,12 +55,12 @@ const initDisplayObject = {
         document.querySelector('#submitTaskChecklistButton').style.display = "block";
     },
     closeChecklist: function() {
-        
         document.querySelector('#inputTaskChecklist').style.display = "none";
         document.querySelector('#submitTaskChecklistButton').style.display = "none";
     },
     addChecklistItem: function() {
-        pubsub.publish('addChecklist', document.querySelector('#inputTaskChecklist').value)
+        pubsub.publish('addChecklist', document.querySelector('#inputTaskChecklist').value);
+        document.querySelector('#inputTaskChecklist').value = '';
     }
 };
 

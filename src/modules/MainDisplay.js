@@ -31,9 +31,21 @@ function displayProjects(projects) {
         })
         addTaskInProjectButton.addEventListener('click', () => {
             taskInProjectForm.style.display = "block";
-        })                                              
+        })       
+                                       
         document.body.append(projectName, addTaskInProjectButton);
         document.body.append(taskInProjectForm);
+        document.getElementById(`addTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
+            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "block";
+            document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "block";
+        })
+        document.getElementById(`submitTaskIn${project.filteredTitle}ChecklistButton`).addEventListener('click', () => {
+            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).style.display = "none";
+            document.querySelector(`#submitTaskIn${project.filteredTitle}ChecklistButton`).style.display = "none";
+            pubsub.publish('addChecklistInTaskInProject',
+                            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value);
+            document.querySelector(`#inputTaskIn${project.filteredTitle}Checklist`).value = '';
+        })
     }
 }
 

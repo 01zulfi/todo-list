@@ -4,6 +4,7 @@ import { TaskItem } from "./FactoryFunctions";
 
 
 const projects = [];
+const checklist = [];
 
 function addProject() {
     const form = document.querySelector('#projectForm').elements;
@@ -13,17 +14,29 @@ function addProject() {
     projects.push(newProject);
     pubsub.publish('addProject', projects);
 }
+pubsub.subscribe('addChecklistInTaskInProject', addChecklistInTaskInProject);
+function addChecklistInTaskInProject(item) {
+    if (!item) return
+    const itemObj = {
+        content: item,
+        checked: false,
+    }
+    checklist.push(itemObj);
+}
 
 pubsub.subscribe('addTaskInProject', addTaskInProject);
 function addTaskInProject(form) {
     const data = form.firstChild.elements;
     const newTask = TaskItem(data[0].value, data[1].value, data[2].value, data[3].value);
+    newTask.checklist = [];
+    newTask.checklist = checklist.slice();
     for (const project of projects) {
         if (form.className.includes(project.filteredTitle)) {
             project.tasks.push(newTask);
         }
     }
     console.log(projects)
+    checklist.splice(0);
 }
 
 
