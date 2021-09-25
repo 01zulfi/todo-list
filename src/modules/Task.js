@@ -1,40 +1,28 @@
-import {TaskItem} from './FactoryFunctions.js'
+import {TaskItem, TaskManager} from './FactoryFunctions.js'
 import { pubsub } from './Pubsub.js';
 
-const taskArray = [];
+const taskModule = {
+    execute: function() {
+        pubsub.subscribe('addTask', createTask);
+        pubsub.subscribe('deleteTask', deleteTask);
 
-pubsub.subscribe('addTask', createTask);
+    }
+}
+
+const allTasks = TaskManager('AllTasks');
+
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
-                            form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
-    setTaskIndex(task);
-    pushTaskInTaskArray(task);
-    pubsub.publish('addTaskDOM', taskArray);
+                          form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'))
+    allTasks.add(task);
+    pubsub.publish('addTaskDOM', allTasks.taskArray);
 }
 
-function pushTaskInTaskArray(task) {
-    taskArray.push(task);
-}
 
-function setTaskIndex(task) {
-    task.index = taskArray.length;
-}
-
-pubsub.subscribe('deleteTask', deleteTask);
 function deleteTask(deletedTask) {
-    const filtered = [];
-    for (const task of taskArray) {
-        if (!deletedTask.includes(task.filteredTitle)) {
-            filtered.push(task);
-        }
-        else {
-            pubsub.publish('deleteTaskDOM', task);
-        }
-    }
-    taskArray.splice(0);
-    taskArray.push(...filtered);
-    console.log(taskArray);
+    allTasks.remove(deletedTask);
 }
+
 pubsub.subscribe('requireTask', sendRequiredTask);
 function sendRequiredTask(requiredTask) {
     for (const task of taskArray) {
@@ -71,5 +59,6 @@ function checkDuplicateTask() {
     })
 }
 
-export {checkDuplicateTask};
+//export {checkDuplicateTask};
 export {updateTask};
+export {taskModule};

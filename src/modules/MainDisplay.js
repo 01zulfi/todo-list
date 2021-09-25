@@ -7,7 +7,6 @@ import { updateTask } from "./Task.js";
 function getData() {
     pubsub.subscribe('addTaskDOM', log);
     pubsub.subscribe('addTaskDOM', displayTasks);
-    pubsub.subscribe('deleteTaskDOM', deleteTaskDOM);
     pubsub.subscribe('updateThisTask', updateTaskFormView);
     pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
     pubsub.subscribe('updateTaskDOM', displayTasks);
@@ -26,7 +25,7 @@ function displayTaskInProject() {       // INCOMPLETE
 
 function displayTasks(tasks) {
     deleteAllTasks();
-    const projectTitle = document.querySelector('.projectTitle');
+    const projectTitle = document.querySelector('.projectTitle');   //to append at right location
     for (const task of tasks) {
         document.body.insertBefore(createTaskCard(task), projectTitle)
     }
@@ -40,7 +39,8 @@ function deleteAllTasks() {
 }
 
 function createTaskCard(task) {
-    const taskDiv = DOMFactory('div', {className: 'taskDiv', id: `${task.filteredTitle}Task`});
+    console.log(task)
+    const taskDiv = DOMFactory('div', {className: 'taskDiv'});
     const taskCardObj = {
         init: function() {
             this.createElements();
@@ -51,15 +51,19 @@ function createTaskCard(task) {
             this.taskTitle = DOMFactory('h4', {className: 'taskTitle', textContent: task.title});
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
-            this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task"});
+            this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task", id: task.id});
             this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task"});
         },
         appendElements: function() {
             taskDiv.append(this.taskTitle, this.taskDesc, this.taskDueDate, this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
-            this.taskDelete.addEventListener('click', (e) => pubsub.publish('deleteTask', e.target.parentNode.id));
+            this.taskDelete.addEventListener('click', this.deleteTaskDOM);
             this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.id));
+        },
+        deleteTaskDOM: function(e) {
+            pubsub.publish('deleteTask', e.target.id);
+            e.target.parentNode.remove();
         },
     }
     taskCardObj.init();
@@ -83,16 +87,6 @@ function updateTaskFormSubmit(task) {
         updateTask(task, document.querySelector('.UpdateTask'));
         document.querySelector('.UpdateTask').remove();
     })
-}
-
-function deleteTaskDOM(task) {
-    const taskDivNodeList = Array.from(document.querySelectorAll('.taskDiv'));
-    for (const taskDiv of taskDivNodeList) {
-        if (taskDiv.id.includes(task.filteredTitle)) {
-            taskDiv.remove();
-            break;
-        }
-    }
 }
 
 function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME ALPHABETS DIFFERENT PUNCTUATION

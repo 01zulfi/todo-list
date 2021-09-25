@@ -10,9 +10,9 @@ const Title = function(title) {
     return {title}
 }
 
-const FilteredTitle = function(title) {
+const filteredTitle = function(title) {
     const filteredTitle = title.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").replace(/\s+/g, '');
-    return {filteredTitle}
+    return filteredTitle
 }
 
 const Description = function(description) {
@@ -32,7 +32,7 @@ const Recurring = function(recurring) {
     return {recurring}
 }
 
-const Checklist = function(items) {
+const checklist = function(items) {
     const checklist = [];
     const itemsArray = Array.from(items);
     for (const item of itemsArray) {
@@ -43,16 +43,44 @@ const Checklist = function(items) {
         }
         checklist.push(checklistObj);
     }
-    return {checklist}
+    return checklist
 }
 
 const TasksInProject = function() {
     return {tasks: []}
 }
 
-const TaskItem = function(title, description, dueDate, priority, checkListItems) {
-    return Object.assign({}, Title(title), FilteredTitle(title), Description(description),
-                             DueDate(dueDate), Priority(priority), Checklist(checkListItems))
+const TaskItem = function(title, description, dueDate, priority, checklistItems) {
+    // const task =  Object.assign({}, Title(title), FilteredTitle(title), Description(description),
+    //                          DueDate(dueDate), Priority(priority), Checklist(checkListItems), {id: Number(Date.now())});
+    const task = {
+        title,
+        filteredTitle: filteredTitle(title),
+        description,
+        dueDate,
+        priority,
+        checklist: checklist(checklistItems),
+        id: Date.now().toString(),
+        done: false,
+    }
+    return {
+        get title() {
+            return task.title
+        },
+        set title(value) {
+            task.title = value;
+        },
+        get description() {
+            return task.description
+        },
+        get id() {
+            return task.id
+        },
+        get dueDate() {
+            return dueDate
+        },
+        task
+    }
 }
 
 const ProjectItem = function(title, description, dueDate) {
@@ -60,6 +88,36 @@ const ProjectItem = function(title, description, dueDate) {
                              TasksInProject())
 }
 
+const TaskManager = function(title, description, dueDate) {
+    let tasks = [];
+    const project = {
+        title,
+        description,
+        dueDate
+    }
+    return {
+        add(task) {
+            tasks = [...tasks, task];
+        },
+        remove(id) {
+            tasks = tasks.filter(task => task.id !== id);        
+        },
+        find(id) {
+            return tasks.find(task => task.id === id)
+        },
+        get taskArray() {
+            return [...tasks]
+        },
+        get projectData() {
+            return project
+        },
+    }
+}
+
+
+
+
 export {TaskItem};
+export {TaskManager}
 export {ProjectItem};
 export default DOMFactory;
