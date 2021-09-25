@@ -110,20 +110,23 @@ function updateTaskFormView(task) {
     const formSection = document.querySelector('section');
     formSection.style.display = "block";
     const form = formSection.firstChild;
+    const submitButton = document.getElementById('submitButtonTask');
     form.elements[0].value = task.title;
     form.elements[1].value = task.description;
     form.elements[2].value = task.dueDate;
     form.elements[3].value = task.priority;
+    for (const item of task.checklist) {
+        const inputTaskChecklistDiv = DOMFactory('div');
+        const inputTaskChecklist = DOMFactory('input', {className: `inputChecklist`, type: "text",
+                                                        value: item.content});
+        const inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'Del Item'});
+        inputTaskChecklistDiv.append(inputTaskChecklist, inputTaskChecklistDelete);
+        form.insertBefore(inputTaskChecklistDiv, submitButton);
+        inputTaskChecklistDelete.addEventListener('click', deleteChecklistItem);
+    }
+    function deleteChecklistItem(event) {event.target.parentNode.remove()};
 }
-
-// function updateTaskFormSubmit(task) {
-//     document.querySelector('.UpdateTask').firstChild.addEventListener('submit', (e) => {
-//         e.preventDefault();
-//         updateTask(task, document.querySelector('.UpdateTask'));
-//         document.querySelector('.UpdateTask').remove();
-//     })
-// }
-
+ 
 function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME ALPHABETS DIFFERENT PUNCTUATION
     projects = projects.filter(project => { 
         if (document.getElementById(`${project.filteredTitle}Project`)) return false
