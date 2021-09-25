@@ -8,8 +8,8 @@ function getData() {
     pubsub.subscribe('addTaskDOM', log);
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('updateThisTask', updateTaskFormView);
-    pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
-    pubsub.subscribe('updateTaskDOM', displayTasks);
+    //pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
+    //pubsub.subscribe('updateTaskDOM', displayTasks);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProjects);
     pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
@@ -39,7 +39,6 @@ function deleteAllTasks() {
 }
 
 function createTaskCard(task) {
-    console.log(task)
     const taskDiv = DOMFactory('div', {className: 'taskDiv'});
     const taskCardObj = {
         init: function() {
@@ -52,14 +51,14 @@ function createTaskCard(task) {
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
             this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task", id: task.id});
-            this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task"});
+            this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task", id: task.id});
         },
         appendElements: function() {
             taskDiv.append(this.taskTitle, this.taskDesc, this.taskDueDate, this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
-            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.id));
+            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.id));
         },
         deleteTaskDOM: function(e) {
             pubsub.publish('deleteTask', e.target.id);
@@ -71,23 +70,22 @@ function createTaskCard(task) {
 }
 
 function updateTaskFormView(task) {
-    const formSection = createTaskForm('UpdateTask');
+    const formSection = document.querySelector('section');
     formSection.style.display = "block";
     const form = formSection.firstChild;
     form.elements[0].value = task.title;
     form.elements[1].value = task.description;
     form.elements[2].value = task.dueDate;
     form.elements[3].value = task.priority;
-    document.body.append(formSection);
 }
 
-function updateTaskFormSubmit(task) {
-    document.querySelector('.UpdateTask').firstChild.addEventListener('submit', (e) => {
-        e.preventDefault();
-        updateTask(task, document.querySelector('.UpdateTask'));
-        document.querySelector('.UpdateTask').remove();
-    })
-}
+// function updateTaskFormSubmit(task) {
+//     document.querySelector('.UpdateTask').firstChild.addEventListener('submit', (e) => {
+//         e.preventDefault();
+//         updateTask(task, document.querySelector('.UpdateTask'));
+//         document.querySelector('.UpdateTask').remove();
+//     })
+// }
 
 function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME ALPHABETS DIFFERENT PUNCTUATION
     projects = projects.filter(project => { 

@@ -5,7 +5,8 @@ const taskModule = {
     execute: function() {
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
-
+        pubsub.subscribe('requireTask', sendRequiredTask);
+        checkDuplicateTask();
     }
 }
 
@@ -18,47 +19,32 @@ function createTask(form) {
     pubsub.publish('addTaskDOM', allTasks.taskArray);
 }
 
-
 function deleteTask(deletedTask) {
     allTasks.remove(deletedTask);
 }
 
-pubsub.subscribe('requireTask', sendRequiredTask);
 function sendRequiredTask(requiredTask) {
-    for (const task of taskArray) {
-        if (requiredTask.includes(task.filteredTitle)) {
-            pubsub.publish('updateThisTask', task);
-            break
-        }
-    }
-}
-
-function updateTask(task, form) {
-    const data = form.firstChild;
-    const updatedTask = TaskItem(data[0].value, data[1].value, data[2].value, data[3].value);
-    updatedTask.index = task.index;
-    taskArray.splice(task.index, 1, updatedTask);
-    pubsub.publish('updateTaskDOM', taskArray);
-    console.log(taskArray);
+    pubsub.publish('updateThisTask', allTasks.find(requiredTask));
+    allTasks.remove(requiredTask);
 }
 
 function checkDuplicateTask() {
-    document.querySelector('#inputTaskTitle').addEventListener('input', (e) => {
-        let count = 0;  //to remove custom validation message when not required
-        for (const task of taskArray) {
+    const inputTitle = document.querySelector('#inputTaskTitle');
+    inputTitle.addEventListener('input', (e) => {
+        let duplicate = false;  //to remove custom validation message when not required
+        for (const task of allTasks.taskArray) {
             if (e.target.value === task.title) {
-                count++;
-                e.target.setCustomValidity("Project with same name already exists");
+                duplicate = true;
+                e.target.setCustomValidity("Task with same name already exists");
             }
         }
-        if (count === 0) {
-            e.target.setCustomValidity("");
+        if (duplicate) {
+            duplicate = false;
         } else {
-            count = 0;  
+            e.target.setCustomValidity("");  
         }
     })
 }
 
-//export {checkDuplicateTask};
 export {updateTask};
 export {taskModule};

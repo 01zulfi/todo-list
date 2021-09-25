@@ -55,7 +55,7 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
     //                          DueDate(dueDate), Priority(priority), Checklist(checkListItems), {id: Number(Date.now())});
     const task = {
         title,
-        filteredTitle: filteredTitle(title),
+        //filteredTitle: filteredTitle(title),
         description,
         dueDate,
         priority,
