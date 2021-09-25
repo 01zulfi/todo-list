@@ -83,6 +83,12 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         get checklist() {
             return task.checklist
         },
+        get done() {
+            return task.done
+        },
+        set done(value) {
+            task.done = value;
+        },
         task
     }
 }

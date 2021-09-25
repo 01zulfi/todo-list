@@ -7,6 +7,7 @@ const taskModule = {
         pubsub.subscribe('deleteTask', deleteTask);
         pubsub.subscribe('requireTask', sendRequiredTask);
         pubsub.subscribe('toggleChecklist', toggleChecklistChecked);
+        pubsub.subscribe('toggleCompleteTask', toggleCompleteTask);
         checkDuplicateTask();
     }
 }
@@ -20,13 +21,13 @@ function createTask(form) {
     pubsub.publish('addTaskDOM', allTasks.taskArray);
 }
 
-function deleteTask(deletedTask) {
-    allTasks.remove(deletedTask);
+function deleteTask(taskId) {
+    allTasks.remove(taskId);
 }
 
-function sendRequiredTask(requiredTask) {
-    pubsub.publish('updateThisTask', allTasks.find(requiredTask));
-    allTasks.remove(requiredTask);
+function sendRequiredTask(taskId) {
+    pubsub.publish('updateThisTask', allTasks.find(taskId));
+    allTasks.remove(taskId);
 }
 
 function toggleChecklistChecked(itemId) {
@@ -42,6 +43,16 @@ function toggleChecklistChecked(itemId) {
         targetChecklistObj.checked = true;
     }
     console.log(allTasks.taskArray);
+}
+
+function toggleCompleteTask(taskId) {
+    const completedTask = allTasks.find(taskId);
+    if (completedTask.done) {
+        completedTask.done = false;
+    } else {
+        completedTask.done = true;
+    }
+    pubsub.publish('toggleCompleteTaskDOM', completedTask);
 }
 
 function checkDuplicateTask() {

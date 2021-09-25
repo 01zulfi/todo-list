@@ -8,9 +8,11 @@ function getData() {
     pubsub.subscribe('addTaskDOM', log);
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('updateThisTask', updateTaskFormView);
+    pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProjects);
     pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
+
 }
 
 function log(data) {
@@ -38,6 +40,11 @@ function deleteAllTasks() {
 
 function createTaskCard(task) {
     const taskDiv = DOMFactory('div', {className: 'taskDiv', id: task.id});
+    if (task.done) {
+        taskDiv.style.opacity = 0.5;
+    } else {
+        taskDiv.style.opacity = 1;
+    }
     const taskCardObj = {
         init: function() {
             this.createElements();
@@ -49,19 +56,22 @@ function createTaskCard(task) {
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskChecklist = createChecklistCheckbox(task.checklist);
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
+            this.taskComplete = DOMFactory('button',  {className: 'taskComplete', textContent: "Completed!"});
             this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task",});
             this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task",});
         },
         appendElements: function() {
-            taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskDelete, this.taskUpdate);
+            taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskComplete,
+                           this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
+            this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask', e.target.parentNode.id));
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
             this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.id));
         },
-        deleteTaskDOM: function(e) {
-            pubsub.publish('deleteTask', e.target.parentNode.id);
-            e.target.parentNode.remove();
+        deleteTaskDOM: function(event) {
+            pubsub.publish('deleteTask', event.target.parentNode.id);
+            event.target.parentNode.remove();
         },
     }
     taskCardObj.init();
@@ -125,6 +135,15 @@ function updateTaskFormView(task) {
         inputTaskChecklistDelete.addEventListener('click', deleteChecklistItem);
     }
     function deleteChecklistItem(event) {event.target.parentNode.remove()};
+}
+
+function completeTaskDOM(task) {
+    const taskDiv = document.getElementById(task.id);
+    if (task.done) {
+        taskDiv.style.opacity = 0.5;
+    } else {
+        taskDiv.style.opacity = 1;
+    }
 }
  
 function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME ALPHABETS DIFFERENT PUNCTUATION
