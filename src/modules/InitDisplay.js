@@ -60,7 +60,7 @@ function createTaskForm(version) {
                                                           placeholder: "high/medium/low"});
             this.addTaskChecklistButton = DOMFactory('button', {id: `add${version}ChecklistButton`, type: "button", 
                                                                 textContent: "Add Checklist"});
-            this.submitButton = DOMFactory('button', {id: "submitButton", type: "submit", textContent: "Submit"});
+            this.submitButton = DOMFactory('button', {id: "submitButtonTask", type: "submit", textContent: "Submit"});
         },
         appendElements: function() {
             this.form.append(this.inputTaskTitle, this.inputTaskDesc, this.inputTaskDueDate, this.inputTaskPriority,
@@ -92,7 +92,7 @@ function createTaskForm(version) {
             this.inputTaskChecklist = DOMFactory('input', {id: `input${version}Checklist`, name: `input${version}Checklist`,
                                                            className: `inputChecklist`, type: "text",
                                                            placeholder: "enter checklist item here..."});
-            this.inputTaskChecklistDelete = DOMFactory('button', {id: `input${version}ChecklistDelete`, textContent: 'Del Item'});
+            this.inputTaskChecklistDelete = DOMFactory('button', {className: `input${version}ChecklistDelete`, textContent: 'Del Item'});
             this.inputTaskChecklistDiv.append(this.inputTaskChecklist, this.inputTaskChecklistDelete);
             this.form.insertBefore(this.inputTaskChecklistDiv, this.submitButton);
             this.inputTaskChecklistDelete.addEventListener('click', this.deleteChecklistItem.bind(formObject));
@@ -122,7 +122,7 @@ function createProjectForm() {
                                                             placeholder: "desc/notes..."});
             this.inputProjectDueDate = DOMFactory('input', {id: "inputProjectDueDate", name: "inputProjectDueDate",
                                                             type: "date"});
-            this.submitButton = DOMFactory('button', {id: "submitButton", type: "submit", textContent: "Submit"});
+            this.submitButton = DOMFactory('button', {id: "submitButtonProject", type: "submit", textContent: "Submit"});
         },
         appendElements: function() {        
             this.form.append(this.inputProjectTitle, this.inputProjectDesc, this.inputProjectDueDate, this.submitButton);

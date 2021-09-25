@@ -49,12 +49,13 @@ function createTaskCard(task) {
         createElements: function() {
             this.taskTitle = DOMFactory('h4', {className: 'taskTitle', textContent: task.title});
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
+            this.taskChecklist = createChecklistCheckbox(task.checklist);
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
             this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task", id: task.id});
             this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task", id: task.id});
         },
         appendElements: function() {
-            taskDiv.append(this.taskTitle, this.taskDesc, this.taskDueDate, this.taskDelete, this.taskUpdate);
+            taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
@@ -67,6 +68,17 @@ function createTaskCard(task) {
     }
     taskCardObj.init();
     return taskDiv
+}
+
+function createChecklistCheckbox(checklist) { 
+    console.log(checklist)
+    const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv'});  
+    for(const item of checklist) {
+        const checkbox = DOMFactory('input', {type: "checkbox", id: item.id});
+        const label = DOMFactory('label', {for: item.id, textContent: item.content});
+        checkboxDiv.append(checkbox, label);
+    }
+    return checkboxDiv
 }
 
 function updateTaskFormView(task) {

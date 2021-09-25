@@ -40,6 +40,7 @@ const checklist = function(items) {
         const checklistObj = {
             content: item.value,
             checked: false,
+            id: Math.floor(Math.random() * Date.now()).toString(),
         }
         checklist.push(checklistObj);
     }
@@ -60,7 +61,7 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         dueDate,
         priority,
         checklist: checklist(checklistItems),
-        id: Date.now().toString(),
+        id: Math.floor(Math.random() * Date.now()).toString(),
         done: false,
     }
     return {
@@ -77,7 +78,10 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
             return task.id
         },
         get dueDate() {
-            return dueDate
+            return task.dueDate
+        },
+        get checklist() {
+            return task.checklist
         },
         task
     }
