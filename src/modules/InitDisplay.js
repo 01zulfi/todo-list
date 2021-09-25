@@ -88,11 +88,18 @@ function createTaskForm(version) {
             this.checkListInputs.forEach(checklist => checklist.remove());
         },
         createChecklist: function() {
+            this.inputTaskChecklistDiv = DOMFactory('div');
             this.inputTaskChecklist = DOMFactory('input', {id: `input${version}Checklist`, name: `input${version}Checklist`,
                                                            className: `inputChecklist`, type: "text",
                                                            placeholder: "enter checklist item here..."});
-            this.form.insertBefore(this.inputTaskChecklist, this.submitButton);
+            this.inputTaskChecklistDelete = DOMFactory('button', {id: `input${version}ChecklistDelete`, textContent: 'Del Item'});
+            this.inputTaskChecklistDiv.append(this.inputTaskChecklist, this.inputTaskChecklistDelete);
+            this.form.insertBefore(this.inputTaskChecklistDiv, this.submitButton);
+            this.inputTaskChecklistDelete.addEventListener('click', this.deleteChecklistItem.bind(formObject));
         },
+        deleteChecklistItem: function(event) {
+            event.target.parentNode.remove();
+        }
 
     }
     formObject.init();

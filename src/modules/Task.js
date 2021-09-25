@@ -46,5 +46,4 @@ function checkDuplicateTask() {
     })
 }
 
-export {updateTask};
 export {taskModule};
