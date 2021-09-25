@@ -84,8 +84,10 @@ function createTaskForm(version) {
             formSection.style.display = "none";
         },
         deleteChecklistInputs: function() {
-            this.checkListInputs = document.querySelectorAll('.inputChecklist');
-            this.checkListInputs.forEach(checklist => checklist.remove());
+            this.checklistInputs = document.querySelectorAll('.inputChecklist');
+            this.checklistButtons = document.querySelectorAll('.inputTaskChecklistDelete');
+            this.checklistInputs.forEach(checklist => checklist.remove());
+            this.checklistButtons.forEach(button => button.remove());
         },
         createChecklist: function() {
             this.inputTaskChecklistDiv = DOMFactory('div');

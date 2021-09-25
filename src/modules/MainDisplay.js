@@ -8,8 +8,6 @@ function getData() {
     pubsub.subscribe('addTaskDOM', log);
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('updateThisTask', updateTaskFormView);
-    //pubsub.subscribe('updateThisTask', updateTaskFormSubmit);
-    //pubsub.subscribe('updateTaskDOM', displayTasks);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProjects);
     pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
@@ -76,6 +74,10 @@ function createChecklistCheckbox(checklist) {
         const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv'});  
         const checkbox = DOMFactory('input', {type: "checkbox", id: item.id, "pointer-events": "none"});
         const label = DOMFactory('label', {for: item.id, textContent: item.content});
+        if (item.checked) {
+            checkbox.checked = true;
+            label.style.opacity = 0.5;
+        }
         checkboxDiv.append(checkbox, label);
         checklistDiv.append(checkboxDiv);
         checkboxDiv.addEventListener('click', toggleCheckbox); 
@@ -87,17 +89,16 @@ function toggleCheckbox(e) {
     const checkbox = this.querySelector('input');
     const label = this.querySelector('label');
     if (checkbox.checked) {
-        pubsub.publish('unselectChecklist', checkbox.id);
         if (e.target.type === undefined) {
             checkbox.checked = false;
         };
     } else {
-        pubsub.publish('selectChecklist', checkbox.id);
         if (e.target.type === undefined) {
             checkbox.checked = true;
         }
     }
     toggleLabel(checkbox.checked, label);
+    pubsub.publish('toggleChecklist', checkbox.id);
 }
 
 function toggleLabel(checked, label) {

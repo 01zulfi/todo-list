@@ -109,6 +109,13 @@ const TaskManager = function(title, description, dueDate) {
         find(id) {
             return tasks.find(task => task.id === id)
         },
+        get checklistArray() {
+            const checklistArray = [];
+            for (let i = 0; i < tasks.length; i++) {
+                checklistArray.push(tasks[i].checklist);
+            }
+            return checklistArray;
+        },
         get taskArray() {
             return [...tasks]
         },
