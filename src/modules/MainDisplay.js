@@ -39,7 +39,7 @@ function deleteAllTasks() {
 }
 
 function createTaskCard(task) {
-    const taskDiv = DOMFactory('div', {className: 'taskDiv'});
+    const taskDiv = DOMFactory('div', {className: 'taskDiv', id: task.id});
     const taskCardObj = {
         init: function() {
             this.createElements();
@@ -51,18 +51,18 @@ function createTaskCard(task) {
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskChecklist = createChecklistCheckbox(task.checklist);
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
-            this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task", id: task.id});
-            this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task", id: task.id});
+            this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task",});
+            this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task",});
         },
         appendElements: function() {
             taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
-            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.id));
+            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.id));
         },
         deleteTaskDOM: function(e) {
-            pubsub.publish('deleteTask', e.target.id);
+            pubsub.publish('deleteTask', e.target.parentNode.id);
             e.target.parentNode.remove();
         },
     }
@@ -71,14 +71,38 @@ function createTaskCard(task) {
 }
 
 function createChecklistCheckbox(checklist) { 
-    console.log(checklist)
-    const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv'});  
+    const checklistDiv = DOMFactory('div', {className: 'checklistDiv'});
     for(const item of checklist) {
-        const checkbox = DOMFactory('input', {type: "checkbox", id: item.id});
+        const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv'});  
+        const checkbox = DOMFactory('input', {type: "checkbox", id: item.id, "pointer-events": "none"});
         const label = DOMFactory('label', {for: item.id, textContent: item.content});
         checkboxDiv.append(checkbox, label);
+        checklistDiv.append(checkboxDiv);
+        checkboxDiv.addEventListener('click', toggleCheckbox); 
     }
-    return checkboxDiv
+    return checklistDiv
+}
+
+function toggleCheckbox(e) {
+    const checkbox = this.querySelector('input');
+    const label = this.querySelector('label');
+    if (checkbox.checked) {
+        pubsub.publish('unselectChecklist', checkbox.id);
+        if (e.target.type === undefined) {
+            checkbox.checked = false;
+        };
+    } else {
+        pubsub.publish('selectChecklist', checkbox.id);
+        if (e.target.type === undefined) {
+            checkbox.checked = true;
+        }
+    }
+    toggleLabel(checkbox.checked, label);
+}
+
+function toggleLabel(checked, label) {
+    if (checked) return label.style.opacity = 0.5;
+    return label.style.opacity = 1;
 }
 
 function updateTaskFormView(task) {
