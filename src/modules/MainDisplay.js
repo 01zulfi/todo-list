@@ -8,10 +8,10 @@ function getData() {
     pubsub.subscribe('addTaskDOM', log);
     
     pubsub.subscribe('addTaskDOM', displayTasks);
-    pubsub.subscribe('updateThisTask', updateTaskFormView);
+    pubsub.subscribe('editThisData', updateTaskFormView);
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
-    //pubsub.subscribe('addProjectDOM', log);
-    //pubsub.subscribe('addProjectDOM', displayProjects);
+    pubsub.subscribe('addProjectDOM', log);
+    pubsub.subscribe('addProjectDOM', createProjectDOM);
    // pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
 
 }
@@ -67,7 +67,7 @@ function createTaskCard(task) {
         createElements: function() {
             this.taskTitle = DOMFactory('h4', {className: 'taskTitle', textContent: task.title});
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
-            this.taskChecklist = createChecklistCheckbox(task.checklist);
+            this.taskChecklist = createChecklistCheckbox(task.checklist, task);
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
             this.taskComplete = DOMFactory('button',  {className: 'taskComplete', textContent: "Completed!"});
             this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task",});
@@ -80,7 +80,7 @@ function createTaskCard(task) {
         bindEvents: function() {
             this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask', e.target.parentNode.getAttribute('data-id')));
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
-            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.getAttribute('data-id')));
+            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireEditData', e.target.parentNode.getAttribute('data-id')));
         },
         deleteTaskDOM: function(event) {
             pubsub.publish('deleteTask', event.target.parentNode.getAttribute('data-id'));
@@ -91,10 +91,10 @@ function createTaskCard(task) {
     return taskDiv
 }
 
-function createChecklistCheckbox(checklist) { 
+function createChecklistCheckbox(checklist, task) { 
     const checklistDiv = DOMFactory('div', {className: 'checklistDiv'});
     for(const item of checklist) {
-        const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv'});  
+        const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv', "data-id": task.id});  
         const checkbox = DOMFactory('input', {type: "checkbox", id: item.id, "data-id": item.id, "pointer-events": "none"});
         const label = DOMFactory('label', {for: item.id, textContent: item.content});
         if (item.checked) {
@@ -121,7 +121,7 @@ function toggleCheckbox(e) {
         }
     }
     toggleLabel(checkbox.checked, label);
-    pubsub.publish('toggleChecklist', checkbox.getAttribute('data-id'));
+    pubsub.publish('toggleChecklist', [checkbox.getAttribute('data-id'), checkbox.parentNode.getAttribute('data-id')]);
 }
 
 function toggleLabel(checked, label) {

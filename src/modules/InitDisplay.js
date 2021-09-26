@@ -15,7 +15,7 @@ const initDisplayObject = {
         //this.taskForm = createTaskForm("Task");   //this.taskForm is a <section> (<form> is the first child)
         //this.project = DOMFactory('h2', {className: "projectTitle", textContent: "Project"});
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
-        //this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
+        this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
     setContent: function() {
     },
@@ -26,18 +26,18 @@ const initDisplayObject = {
         //document.body.append(this.taskForm);
         //document.body.append(this.project, this.addProjectButton);
         document.body.append(this.addProjectButton);
-        //document.body.append(this.projectForm);
+        document.body.append(this.projectForm);
     },
     bindEvents: function() {
         //this.addTaskButton.addEventListener('click', this.openTaskForm.bind(initDisplayObject));
-        //this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
+        this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
     },
     openTaskForm: function() {
         //this.taskForm.style.display = "block";
         //document.body.append(this.taskForm);
     },
     openProjectForm: function() {
-        //this.projectForm.style.display = "block";
+        this.projectForm.style.display = "block";
         //this.taskForm.remove();
     },
 };

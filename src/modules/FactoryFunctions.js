@@ -59,6 +59,9 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         get checklist() {
             return task.checklist
         },
+        findChecklistItem(id) {
+            return task.checklist.find(item => item.id === id)
+        },
         get done() {
             return task.done
         },
@@ -87,12 +90,8 @@ const TaskManager = function(title, description, dueDate) {
         find(id) {
             return tasks.find(task => task.id === id)
         },
-        get checklistArray() {
-            const checklistArray = [];
-            for (let i = 0; i < tasks.length; i++) {
-                checklistArray.push(tasks[i].checklist);
-            }
-            return checklistArray;
+        getChecklistObj(checklistId) {
+            return tasks.find(task => task.findChecklistItem(checklistId))
         },
         get taskArray() {
             return [...tasks]
@@ -130,6 +129,9 @@ const ProjectManager = function() {
         },
         findWithTaskId(taskId) {
             return projects.find(project => project.find(taskId));
+        },
+        getTaskWithTaskId(taskId) {
+            return this.findWithTaskId(taskId).find(taskId)
         },
         get projectArray() {
             return [...projects]

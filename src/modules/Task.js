@@ -6,7 +6,7 @@ const taskModule = {
         pubsub.publish('initializeDOM', allTasks.metaData)
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
-        pubsub.subscribe('requireTask', sendRequiredTask);
+        pubsub.subscribe('requireEditData', sendRequiredData);
         pubsub.subscribe('toggleChecklist', toggleChecklistChecked);
         pubsub.subscribe('toggleCompleteTask', toggleCompleteTask);
         pubsub.subscribe('addProject', createProject);
@@ -32,39 +32,32 @@ function createProject(form) {
     const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
                                    form['inputProjectDueDate'].value);
     allProjects.add(project);
-    pubsub.publish('addProjectDOM', allProjects.projectArray);
+    pubsub.publish('addProjectDOM', project.metaData);
     console.log(allProjects.projectArray);
 }
 
 function deleteTask(taskId) {
-    //for (let i = 0; i<allProjects.projectArray.length; i++) {
-      //  allProjects.projectArray[i].remove(taskId)
-    //}
-    //allProjects.projectArray.forEach(project => project.remove(taskId));
-    const req = allProjects.findWithTaskId(taskId);
-    req.remove(taskId);
+    const task = allProjects.findWithTaskId(taskId);
+    task.remove(taskId);
     console.log(allProjects)
     //allTasks.remove(taskId);
 }
 
-function sendRequiredTask(taskId) {
-    pubsub.publish('updateThisTask', [allProjects.findWithTaskId(taskId), allProjects.findWithTaskId(taskId).find(taskId)]);
+function sendRequiredData(taskId) {
+    pubsub.publish('editThisData', [allProjects.findWithTaskId(taskId), allProjects.getTaskWithTaskId(taskId)]);
     deleteTask(taskId);
 }
 
-function toggleChecklistChecked(itemId) {
-    console.log(allTasks.checklistArray);
-    let targetChecklistObj;
-    for (let i = 0; i < allTasks.checklistArray.length; i++) {
-        targetChecklistObj = allTasks.checklistArray[i].find(item => item.id === itemId);
-        if (targetChecklistObj) break
-    }
+function toggleChecklistChecked([itemId, taskId]) {
+    console.log(taskId);
+    const task = allProjects.getTaskWithTaskId(taskId);
+    const targetChecklistObj = task.findChecklistItem(itemId);
+    console.log(task);
     if (targetChecklistObj.checked) {
         targetChecklistObj.checked = false;
     } else {
         targetChecklistObj.checked = true;
     }
-    console.log(allTasks.taskArray);
 }
 
 function toggleCompleteTask(taskId) {
