@@ -1,4 +1,3 @@
-//import { ProjectItem } from "./FactoryFunctions";
 import { pubsub } from "./Pubsub";
 import { TaskItem, TaskManager, ProjectManager } from "./FactoryFunctions";
 

@@ -6,32 +6,6 @@ const DOMFactory = function(element, attributes) {  //for simple elements
     return newElement
 }
 
-const Title = function(title) {
-    return {title}
-}
-
-const filteredTitle = function(title) {
-    const filteredTitle = title.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").replace(/\s+/g, '');
-    return filteredTitle
-}
-
-const Description = function(description) {
-    return {description}
-}
-
-const DueDate = function(dueDate) {
-    return {dueDate}
-}
-
-const Priority = function(priority) {
-    return {priority}
-}
-
-const Recurring = function(recurring) {
-    if (recurring === '') return {recurring: 'no'};
-    return {recurring}
-}
-
 const uniqueId = function() {
     return Math.floor(Math.random() * Date.now()).toString()
 }
@@ -49,10 +23,6 @@ const checklist = function(items) {
         checklist.push(checklistObj);
     }
     return checklist
-}
-
-const TasksInProject = function() {
-    return {tasks: []}
 }
 
 const TaskItem = function(title, description, dueDate, priority, checklistItems) {
@@ -93,32 +63,6 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         task
     }
 }
-
-// const ProjectItem = function(title, description, dueDate) {
-//     // return Object.assign({}, Title(title), FilteredTitle(title), Description(description), DueDate(dueDate),
-//     //                          TasksInProject())
-//     const project = {
-//         title,
-//         description,
-//         dueDate,
-//         id: uniqueId(),
-//     }
-//     return {
-//         get title() {
-//             return project.title
-//         },
-//         get description() {
-//             return project.description
-//         },
-//         get dueDate() {
-//             return project.dueDate
-//         },
-//         get id() {
-//             return project.id
-//         },
-//         project
-//     }
-// }
 
 const TaskManager = function(title, description, dueDate) {
     const project = {
@@ -185,12 +129,7 @@ const ProjectManager = function() {
     }
 }
 
-
-
-
-
 export {TaskItem};
-export {TaskManager}
-//export {ProjectItem};
+export {TaskManager};
 export {ProjectManager};
 export default DOMFactory;
