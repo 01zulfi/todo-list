@@ -1,4 +1,4 @@
-import {TaskItem, TaskManager} from './FactoryFunctions.js'
+import {TaskItem, TaskManager, ProjectManager} from './FactoryFunctions.js'
 import { pubsub } from './Pubsub.js';
 
 const taskModule = {
@@ -8,17 +8,40 @@ const taskModule = {
         pubsub.subscribe('requireTask', sendRequiredTask);
         pubsub.subscribe('toggleChecklist', toggleChecklistChecked);
         pubsub.subscribe('toggleCompleteTask', toggleCompleteTask);
-        checkDuplicateTask();
+        pubsub.subscribe('addProject', createProject);
+        //checkDuplicateTask();
     }
 }
 
-const allTasks = TaskManager();
+const allTasks = TaskManager('allTasks');
+
+const allProjects = ProjectManager();
+allProjects.add(allTasks);
+console.log(allProjects)
 
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
-                          form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'))
-    allTasks.add(task);
-    pubsub.publish('addTaskDOM', allTasks.taskArray);
+                          form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
+    if (form[0].parentNode.name === "undefined") {
+        allTasks.add(task);
+        pubsub.publish('addTaskDOM', allTasks.taskArray);
+        return
+    } 
+    const id = form[0].parentNode.name;
+    const targetProject = allProjects.find(id);
+    console.log(id);
+    console.log(targetProject);
+    targetProject.add(task);
+    console.log(allProjects.projectArray);
+}
+
+function createProject(form) {
+    console.log(form)
+    const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
+                                   form['inputProjectDueDate'].value);
+    allProjects.add(project);
+    pubsub.publish('addProjectDOM', allProjects.projectArray);
+    console.log(allProjects.projectArray);
 }
 
 function deleteTask(taskId) {

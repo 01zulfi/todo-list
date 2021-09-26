@@ -113,8 +113,8 @@ function toggleLabel(checked, label) {
 }
 
 function updateTaskFormView(task) {
-    const formSection = document.querySelector('section');
-    formSection.style.display = "block";
+    const formSection = createTaskForm('Task');
+    document.body.append(formSection);
     const form = formSection.firstChild;
     const submitButton = document.getElementById('submitButtonTask');
     form.elements[0].value = task.title;
@@ -149,16 +149,17 @@ function displayTaskInProject() {       // INCOMPLETE
 
 function displayProjects(projects) {
     for (const project of projects) {
+        if (project.metaData.title === "allTasks") continue
         const projectName = DOMFactory('h3', {id: project.metaData.id , className: "projectName",
                                               textContent: `${project.metaData.title}`});
         const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProjectButton",
                                                              textContent: `Add Task in ${project.metaData.title}`})
-        const taskInProjectForm = createTaskForm("Project");
+        const taskInProjectForm = createTaskForm("Project", project.metaData.id);
         addTaskInProjectButton.addEventListener('click', () => {
-            taskInProjectForm.style.display = "block";
+            document.body.append(taskInProjectForm);
         })                                     
         document.body.append(projectName, addTaskInProjectButton);
-        document.body.append(taskInProjectForm);
+        //document.body.append(taskInProjectForm);
     }
 }
 

@@ -23,7 +23,7 @@ const initDisplayObject = {
         document.body.append(this.title);
         document.body.append(this.task);
         document.body.append(this.addTaskButton);
-        document.body.append(this.taskForm);
+        //document.body.append(this.taskForm);
         document.body.append(this.project, this.addProjectButton);
         document.body.append(this.projectForm);
     },
@@ -32,15 +32,17 @@ const initDisplayObject = {
         this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
     },
     openTaskForm: function() {
-        this.taskForm.style.display = "block";
+        //this.taskForm.style.display = "block";
+        document.body.append(this.taskForm);
     },
     openProjectForm: function() {
         this.projectForm.style.display = "block";
+        //this.taskForm.remove();
     },
 };
 
-function createTaskForm(version) {
-    const formSection = DOMFactory('section', {id: `section${version}Form`, className: version, style: "display: none"});
+function createTaskForm(version, name) {
+    const formSection = DOMFactory('section', {id: `section${version}Form`, className: version});
     const formObject = {
         init: function() {
             this.createElements();
@@ -48,7 +50,7 @@ function createTaskForm(version) {
             this.bindEvents();
         },
         createElements: function() {
-            this.form = DOMFactory('form', {id: `form${version}`});
+            this.form = DOMFactory('form', {id: `form${version}`, name: name});
             this.inputTaskTitle = DOMFactory('input', {id: `input${version}Title`, name: `inputTaskName`,
                                                        type: "text", maxLength: "50", placeholder: "task title...",
                                                        required: "true"});
@@ -74,14 +76,16 @@ function createTaskForm(version) {
             this.addTaskChecklistButton.addEventListener('click', this.createChecklist.bind(formObject));
         },
         publishData: function() {
-            if (version === "Task") return pubsub.publish('addTask', this.form.elements);
-            if (version === "UpdateTask") return pubsub.publish('updateTask', this.form.elements);
-            return pubsub.publish('addTaskInProject', this.form.elements);
+            //if (version === "Task") return 
+            pubsub.publish('addTask', this.form.elements);
+            //if (version === "UpdateTask") return pubsub.publish('updateTask', this.form.elements);
+            //return pubsub.publish('addTaskInProject', this.form.elements);
         },
         formFunction: function(event) {
             event.preventDefault();
             this.form.reset();
-            formSection.style.display = "none";
+            //formSection.style.display = "none";
+            formSection.remove();
         },
         deleteChecklistInputs: function() {
             this.checklistInputs = document.querySelectorAll('.inputChecklist');

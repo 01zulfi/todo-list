@@ -1,7 +1,12 @@
 const DOMFactory = function(element, attributes) {  //for simple elements
     const newElement = document.createElement(element);
     for (const attribute in attributes) {
-        newElement[attribute] = attributes[attribute];
+        if (attribute.toString().includes('data')) {
+            newElement.setAttribute(attribute.toString(), attributes[attribute]);
+        } else {
+            newElement[attribute] = attributes[attribute];
+        }
+        
     }
     return newElement
 }
@@ -121,7 +126,7 @@ const ProjectManager = function() {
             projects = projects.filter(project => project.id !== id);
         },
         find(id) {
-            return projects.find(project => project.id === id)
+            return projects.find(project => project.metaData.id === id)
         },
         get projectArray() {
             return [...projects]

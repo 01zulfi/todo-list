@@ -6,7 +6,7 @@ import getData from './modules/MainDisplay.js';
 
 pageLoadContent();
 taskModule.execute();
-projectModule.execute();
+//projectModule.execute();
 getData();
 
 

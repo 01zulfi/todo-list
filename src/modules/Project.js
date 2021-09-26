@@ -52,4 +52,4 @@ function checkDuplicateProject() {
     })
 }
 
-export {projectModule};
+//export {projectModule};
