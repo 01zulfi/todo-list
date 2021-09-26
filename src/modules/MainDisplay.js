@@ -1,25 +1,22 @@
 import DOMFactory from "./FactoryFunctions.js";
 import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
-import { updateTask } from "./Task.js";
-
 
 function getData() {
     pubsub.subscribe('addTaskDOM', log);
-    
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('editThisData', updateTaskFormView);
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', createProjectDOM);
-   // pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
-
 }
 
 function log(data) {
     console.log(data);
 }
+
 pubsub.subscribe('initializeDOM', createProjectDOM);
+
 function createProjectDOM(project) {
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
     const projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
@@ -33,7 +30,6 @@ function createProjectDOM(project) {
         this.parentNode.append(formSection);
     }
 }
-
 
 function displayTasks(project) {
     const projectSection = document.querySelector(`[data-id="${project.metaData.id}"]`);
@@ -78,9 +74,11 @@ function createTaskCard(task) {
                            this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
-            this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask', e.target.parentNode.getAttribute('data-id')));
+            this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask',
+                                                                               e.target.parentNode.getAttribute('data-id')));
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
-            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireEditData', e.target.parentNode.getAttribute('data-id')));
+            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireEditData',
+                                                                            e.target.parentNode.getAttribute('data-id')));
         },
         deleteTaskDOM: function(event) {
             pubsub.publish('deleteTask', event.target.parentNode.getAttribute('data-id'));
@@ -156,27 +154,6 @@ function completeTaskDOM(task) {
         taskDiv.style.opacity = 0.5;
     } else {
         taskDiv.style.opacity = 1;
-    }
-}
- 
-
-function displayTaskInProject() {       // INCOMPLETE
-
-}
-
-function displayProjects(projects) {
-    for (const project of projects) {
-        if (project.metaData.title === "allTasks") continue
-        const projectName = DOMFactory('h3', {"data-id": project.metaData.id , className: "projectName",
-                                              textContent: `${project.metaData.title}`});
-        const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProjectButton",
-                                                             textContent: `Add Task in ${project.metaData.title}`})
-        const taskInProjectForm = createTaskForm("Project", project.metaData.id);
-        addTaskInProjectButton.addEventListener('click', () => {
-            document.body.append(taskInProjectForm);
-        })                                     
-        document.body.append(projectName, addTaskInProjectButton);
-        //document.body.append(taskInProjectForm);
     }
 }
 

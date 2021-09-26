@@ -10,7 +10,6 @@ const taskModule = {
         pubsub.subscribe('toggleChecklist', toggleChecklistChecked);
         pubsub.subscribe('toggleCompleteTask', toggleCompleteTask);
         pubsub.subscribe('addProject', createProject);
-        //checkDuplicateTask();
     }
 }
 
@@ -39,8 +38,7 @@ function createProject(form) {
 function deleteTask(taskId) {
     const task = allProjects.findWithTaskId(taskId);
     task.remove(taskId);
-    console.log(allProjects)
-    //allTasks.remove(taskId);
+    console.log(allProjects);
 }
 
 function sendRequiredData(taskId) {
@@ -68,24 +66,6 @@ function toggleCompleteTask(taskId) {
         completedTask.done = true;
     }
     pubsub.publish('toggleCompleteTaskDOM', completedTask);
-}
-
-function checkDuplicateTask() {
-    const inputTitle = document.querySelector('#inputTaskTitle');
-    inputTitle.addEventListener('input', (e) => {
-        let duplicate = false;  //to remove custom validation message when not required
-        for (const task of allTasks.taskArray) {
-            if (e.target.value === task.title) {
-                duplicate = true;
-                e.target.setCustomValidity("Task with same name already exists");
-            }
-        }
-        if (duplicate) {
-            duplicate = false;
-        } else {
-            e.target.setCustomValidity("");  
-        }
-    })
 }
 
 export {taskModule};

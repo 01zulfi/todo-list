@@ -4,41 +4,24 @@ import { pubsub } from "./Pubsub.js";
 const initDisplayObject = {
     init: function() {
         this.createElements();
-        this.setContent();
         this.appendContent();
         this.bindEvents();
     },
     createElements: function() {
         this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
-        //this.task = DOMFactory('h2', {className: "taskTitle", textContent: "Task"});
-        //this.addTaskButton = DOMFactory('button', {className: "addTaskButton", textContent: "Add Task"});
-        //this.taskForm = createTaskForm("Task");   //this.taskForm is a <section> (<form> is the first child)
-        //this.project = DOMFactory('h2', {className: "projectTitle", textContent: "Project"});
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
         this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
-    setContent: function() {
-    },
     appendContent: function() {
         document.body.append(this.title);
-        //document.body.append(this.task);
-        //document.body.append(this.addTaskButton);
-        //document.body.append(this.taskForm);
-        //document.body.append(this.project, this.addProjectButton);
         document.body.append(this.addProjectButton);
         document.body.append(this.projectForm);
     },
     bindEvents: function() {
-        //this.addTaskButton.addEventListener('click', this.openTaskForm.bind(initDisplayObject));
         this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
-    },
-    openTaskForm: function() {
-        //this.taskForm.style.display = "block";
-        //document.body.append(this.taskForm);
     },
     openProjectForm: function() {
         this.projectForm.style.display = "block";
-        //this.taskForm.remove();
     },
 };
 
@@ -77,15 +60,11 @@ function createTaskForm(version, name) {
             this.addTaskChecklistButton.addEventListener('click', this.createChecklist.bind(formObject));
         },
         publishData: function() {
-            //if (version === "Task") return 
             pubsub.publish('addTask', this.form.elements);
-            //if (version === "UpdateTask") return pubsub.publish('updateTask', this.form.elements);
-            //return pubsub.publish('addTaskInProject', this.form.elements);
         },
         formFunction: function(event) {
             event.preventDefault();
             this.form.reset();
-            //formSection.style.display = "none";
             formSection.remove();
         },
         deleteChecklistInputs: function() {
@@ -151,8 +130,6 @@ function createProjectForm() {
     formObject.init();
     return formSection;
 }
-
-
 
 const pageLoadContent = () => initDisplayObject.init();
 

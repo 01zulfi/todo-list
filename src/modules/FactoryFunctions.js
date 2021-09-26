@@ -44,9 +44,6 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         get title() {
             return task.title
         },
-        set title(value) {
-            task.title = value;
-        },
         get description() {
             return task.description
         },
@@ -89,9 +86,6 @@ const TaskManager = function(title, description, dueDate) {
         },
         find(id) {
             return tasks.find(task => task.id === id)
-        },
-        getChecklistObj(checklistId) {
-            return tasks.find(task => task.findChecklistItem(checklistId))
         },
         get taskArray() {
             return [...tasks]
