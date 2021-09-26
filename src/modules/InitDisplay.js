@@ -92,7 +92,7 @@ function createTaskForm(version) {
         createChecklist: function() {
             this.inputTaskChecklistDiv = DOMFactory('div');
             this.inputTaskChecklist = DOMFactory('input', {id: `input${version}Checklist`, name: `input${version}Checklist`,
-                                                           className: `inputChecklist`, type: "text",
+                                                           className: `inputChecklist`, type: "text", disabled: false,
                                                            placeholder: "enter checklist item here..."});
             this.inputTaskChecklistDelete = DOMFactory('button', {className: `input${version}ChecklistDelete`, textContent: 'Del Item'});
             this.inputTaskChecklistDiv.append(this.inputTaskChecklist, this.inputTaskChecklistDelete);

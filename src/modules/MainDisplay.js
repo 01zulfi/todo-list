@@ -128,7 +128,7 @@ function updateTaskFormView(task) {
     for (const item of task.checklist) {
         const inputTaskChecklistDiv = DOMFactory('div');
         const inputTaskChecklist = DOMFactory('input', {className: `inputChecklist`, type: "text",
-                                                        value: item.content});
+                                                        value: item.content, disabled: item.checked});
         const inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'Del Item'});
         inputTaskChecklistDiv.append(inputTaskChecklist, inputTaskChecklistDelete);
         form.insertBefore(inputTaskChecklistDiv, submitButton);

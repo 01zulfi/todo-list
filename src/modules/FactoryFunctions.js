@@ -39,7 +39,7 @@ const checklist = function(items) {
         if (item.value === "") continue
         const checklistObj = {
             content: item.value,
-            checked: false,
+            checked: item.disabled,
             id: Math.floor(Math.random() * Date.now()).toString(),
         }
         checklist.push(checklistObj);
