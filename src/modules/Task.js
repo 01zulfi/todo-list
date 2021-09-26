@@ -61,7 +61,7 @@ function toggleChecklistChecked([itemId, taskId]) {
 }
 
 function toggleCompleteTask(taskId) {
-    const completedTask = allTasks.find(taskId);
+    const completedTask = allProjects.getTaskWithTaskId(taskId);
     if (completedTask.done) {
         completedTask.done = false;
     } else {
