@@ -12,7 +12,7 @@ const taskModule = {
     }
 }
 
-const allTasks = TaskManager('AllTasks');
+const allTasks = TaskManager();
 
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 

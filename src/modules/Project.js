@@ -1,18 +1,28 @@
-import { ProjectItem } from "./FactoryFunctions";
+//import { ProjectItem } from "./FactoryFunctions";
 import { pubsub } from "./Pubsub";
-import { TaskItem } from "./FactoryFunctions";
+import { TaskItem, TaskManager, ProjectManager } from "./FactoryFunctions";
 
-const projects = [];
 
-pubsub.subscribe('addProject', createProject)
-function createProject(form) {
-    const project = ProjectItem(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
-                                   form['inputProjectDueDate'].value);
-    projects.push(project);
-    pubsub.publish('addProjectDOM', projects);
+const projectModule = {
+    execute: function() {
+        pubsub.subscribe('addProject', createProject);
+        pubsub.subscribe('addTaskInProject', addTaskInProject);
+        //checkDuplicateProject();
+    }
 }
 
-pubsub.subscribe('addTaskInProject', addTaskInProject);
+const allProjects = ProjectManager();
+
+function createProject(form) {
+    console.log(form)
+    const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
+                                   form['inputProjectDueDate'].value);
+    allProjects.add(project);
+    pubsub.publish('addProjectDOM', allProjects.projectArray);
+    console.log(allProjects.projectArray);
+}
+
+
 function addTaskInProject(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value,
                              form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
@@ -43,4 +53,4 @@ function checkDuplicateProject() {
     })
 }
 
-export {checkDuplicateProject};
+export {projectModule};

@@ -11,16 +11,12 @@ function getData() {
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProjects);
-    pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
+   // pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
 
 }
 
 function log(data) {
     console.log(data);
-}
-
-function displayTaskInProject() {       // INCOMPLETE
-
 }
 
 function displayTasks(tasks) {
@@ -146,17 +142,18 @@ function completeTaskDOM(task) {
     }
 }
  
-function displayProjects(projects) {            // NEED FIX FOR NAMES WITH SAME ALPHABETS DIFFERENT PUNCTUATION
-    projects = projects.filter(project => { 
-        if (document.getElementById(`${project.filteredTitle}Project`)) return false
-        return true
-    })
+
+function displayTaskInProject() {       // INCOMPLETE
+
+}
+
+function displayProjects(projects) {
     for (const project of projects) {
-        const projectName = DOMFactory('h3', {id: `${project.filteredTitle}Project`, className: "projectName",
-                                              textContent: `${project.title}`});
-        const addTaskInProjectButton = DOMFactory('button', {id: `${project.filteredTitle} button`,
-                                                             textContent: `Add Task in ${project.title}`})
-        const taskInProjectForm = createTaskForm(`TaskIn${project.filteredTitle}`);
+        const projectName = DOMFactory('h3', {id: project.metaData.id , className: "projectName",
+                                              textContent: `${project.metaData.title}`});
+        const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProjectButton",
+                                                             textContent: `Add Task in ${project.metaData.title}`})
+        const taskInProjectForm = createTaskForm("Project");
         addTaskInProjectButton.addEventListener('click', () => {
             taskInProjectForm.style.display = "block";
         })                                     

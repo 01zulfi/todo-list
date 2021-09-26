@@ -32,6 +32,10 @@ const Recurring = function(recurring) {
     return {recurring}
 }
 
+const uniqueId = function() {
+    return Math.floor(Math.random() * Date.now()).toString()
+}
+
 const checklist = function(items) {
     const checklist = [];
     const itemsArray = Array.from(items);
@@ -40,7 +44,7 @@ const checklist = function(items) {
         const checklistObj = {
             content: item.value,
             checked: item.disabled,
-            id: Math.floor(Math.random() * Date.now()).toString(),
+            id: uniqueId(),
         }
         checklist.push(checklistObj);
     }
@@ -52,16 +56,13 @@ const TasksInProject = function() {
 }
 
 const TaskItem = function(title, description, dueDate, priority, checklistItems) {
-    // const task =  Object.assign({}, Title(title), FilteredTitle(title), Description(description),
-    //                          DueDate(dueDate), Priority(priority), Checklist(checkListItems), {id: Number(Date.now())});
     const task = {
         title,
-        //filteredTitle: filteredTitle(title),
         description,
         dueDate,
         priority,
         checklist: checklist(checklistItems),
-        id: Math.floor(Math.random() * Date.now()).toString(),
+        id: uniqueId(),
         done: false,
     }
     return {
@@ -93,18 +94,40 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
     }
 }
 
-const ProjectItem = function(title, description, dueDate) {
-    return Object.assign({}, Title(title), FilteredTitle(title), Description(description), DueDate(dueDate),
-                             TasksInProject())
-}
+// const ProjectItem = function(title, description, dueDate) {
+//     // return Object.assign({}, Title(title), FilteredTitle(title), Description(description), DueDate(dueDate),
+//     //                          TasksInProject())
+//     const project = {
+//         title,
+//         description,
+//         dueDate,
+//         id: uniqueId(),
+//     }
+//     return {
+//         get title() {
+//             return project.title
+//         },
+//         get description() {
+//             return project.description
+//         },
+//         get dueDate() {
+//             return project.dueDate
+//         },
+//         get id() {
+//             return project.id
+//         },
+//         project
+//     }
+// }
 
 const TaskManager = function(title, description, dueDate) {
-    let tasks = [];
     const project = {
         title,
         description,
-        dueDate
+        dueDate,
+        id: uniqueId(),
     }
+    let tasks = [];
     return {
         add(task) {
             tasks = [...tasks, task];
@@ -125,8 +148,39 @@ const TaskManager = function(title, description, dueDate) {
         get taskArray() {
             return [...tasks]
         },
-        get projectData() {
-            return project
+        get metaData() {
+            return {
+                get title() {
+                    return project.title
+                },
+                get description() {
+                    return project.description
+                },
+                get dueDate() {
+                    return project.dueDate
+                },
+                get id() {
+                    return project.id
+                },
+            }
+        },
+    }
+}
+
+const ProjectManager = function() {
+    let projects = [];
+    return {
+        add(project) {
+            projects = [...projects, project];
+        },
+        remove(id) {
+            projects = projects.filter(project => project.id !== id);
+        },
+        find(id) {
+            return projects.find(project => project.id === id)
+        },
+        get projectArray() {
+            return [...projects]
         },
     }
 }
@@ -134,7 +188,9 @@ const TaskManager = function(title, description, dueDate) {
 
 
 
+
 export {TaskItem};
 export {TaskManager}
-export {ProjectItem};
+//export {ProjectItem};
+export {ProjectManager};
 export default DOMFactory;
