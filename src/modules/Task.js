@@ -3,6 +3,7 @@ import { pubsub } from './Pubsub.js';
 
 const taskModule = {
     execute: function() {
+        pubsub.publish('initializeDOM', allTasks.metaData)
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
         pubsub.subscribe('requireTask', sendRequiredTask);
@@ -13,26 +14,17 @@ const taskModule = {
     }
 }
 
-const allTasks = TaskManager('allTasks');
-
+const allTasks = TaskManager('All Tasks');
 const allProjects = ProjectManager();
 allProjects.add(allTasks);
-console.log(allProjects)
 
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                           form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
-    if (form[0].parentNode.name === "undefined") {
-        allTasks.add(task);
-        pubsub.publish('addTaskDOM', allTasks.taskArray);
-        return
-    } 
     const id = form[0].parentNode.name;
     const targetProject = allProjects.find(id);
-    console.log(id);
-    console.log(targetProject);
     targetProject.add(task);
-    console.log(allProjects.projectArray);
+    pubsub.publish('addTaskDOM', targetProject)
 }
 
 function createProject(form) {
@@ -45,7 +37,12 @@ function createProject(form) {
 }
 
 function deleteTask(taskId) {
-    allTasks.remove(taskId);
+    //for (let i = 0; i<allProjects.projectArray.length; i++) {
+      //  allProjects.projectArray[i].remove(taskId)
+    //}
+    allProjects.projectArray.forEach(project => project.remove(taskId));
+    console.log(allProjects)
+    //allTasks.remove(taskId);
 }
 
 function sendRequiredTask(taskId) {

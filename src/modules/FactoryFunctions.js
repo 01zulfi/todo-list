@@ -123,7 +123,7 @@ const ProjectManager = function() {
             projects = [...projects, project];
         },
         remove(id) {
-            projects = projects.filter(project => project.id !== id);
+            projects = projects.filter(project => project.metaData.id !== id);
         },
         find(id) {
             return projects.find(project => project.metaData.id === id)

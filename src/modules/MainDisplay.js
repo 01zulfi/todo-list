@@ -6,11 +6,12 @@ import { updateTask } from "./Task.js";
 
 function getData() {
     pubsub.subscribe('addTaskDOM', log);
+    
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('updateThisTask', updateTaskFormView);
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
-    pubsub.subscribe('addProjectDOM', log);
-    pubsub.subscribe('addProjectDOM', displayProjects);
+    //pubsub.subscribe('addProjectDOM', log);
+    //pubsub.subscribe('addProjectDOM', displayProjects);
    // pubsub.subscribe('addTaskInProjectDOM', displayTaskInProject);
 
 }
@@ -18,24 +19,40 @@ function getData() {
 function log(data) {
     console.log(data);
 }
-
-function displayTasks(tasks) {
-    deleteAllTasks();
-    const projectTitle = document.querySelector('.projectTitle');   //to append at right location
-    for (const task of tasks) {
-        document.body.insertBefore(createTaskCard(task), projectTitle)
+pubsub.subscribe('initializeDOM', createProjectDOM);
+function createProjectDOM(project) {
+    const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
+    const projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
+    const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
+                                                         textContent: `Add Task in ${project.title}`});
+    projectSection.append(projectHeading, addTaskInProjectButton);
+    document.body.append(projectSection);
+    addTaskInProjectButton.addEventListener('click', openForm);
+    function openForm() {
+        const formSection = createTaskForm('Task', this.parentNode.getAttribute('data-id'));
+        this.parentNode.append(formSection);
     }
 }
 
-function deleteAllTasks() {
-    const taskDivNodeList = document.querySelectorAll('.taskDiv');
+
+function displayTasks(project) {
+    const projectSection = document.querySelector(`[data-id="${project.metaData.id}"]`);
+    deleteAllTasks(projectSection);
+    const tasks = project.taskArray;
+    for (const task of tasks) {
+        projectSection.append(createTaskCard(task));
+    }
+}
+
+function deleteAllTasks(projectSection) {
+    const taskDivNodeList = projectSection.querySelectorAll('.taskDiv');
     if (taskDivNodeList) {
         taskDivNodeList.forEach(taskDiv => taskDiv.remove());
     }
 }
 
 function createTaskCard(task) {
-    const taskDiv = DOMFactory('div', {className: 'taskDiv', id: task.id});
+    const taskDiv = DOMFactory('div', {className: 'taskDiv', "data-id": task.id});
     if (task.done) {
         taskDiv.style.opacity = 0.5;
     } else {
@@ -61,12 +78,12 @@ function createTaskCard(task) {
                            this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
-            this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask', e.target.parentNode.id));
+            this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask', e.target.parentNode.getAttribute('data-id')));
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
-            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.id));
+            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireTask', e.target.parentNode.getAttribute('data-id')));
         },
         deleteTaskDOM: function(event) {
-            pubsub.publish('deleteTask', event.target.parentNode.id);
+            pubsub.publish('deleteTask', event.target.parentNode.getAttribute('data-id'));
             event.target.parentNode.remove();
         },
     }
@@ -78,7 +95,7 @@ function createChecklistCheckbox(checklist) {
     const checklistDiv = DOMFactory('div', {className: 'checklistDiv'});
     for(const item of checklist) {
         const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv'});  
-        const checkbox = DOMFactory('input', {type: "checkbox", id: item.id, "pointer-events": "none"});
+        const checkbox = DOMFactory('input', {type: "checkbox", id: item.id, "data-id": item.id, "pointer-events": "none"});
         const label = DOMFactory('label', {for: item.id, textContent: item.content});
         if (item.checked) {
             checkbox.checked = true;
@@ -104,7 +121,7 @@ function toggleCheckbox(e) {
         }
     }
     toggleLabel(checkbox.checked, label);
-    pubsub.publish('toggleChecklist', checkbox.id);
+    pubsub.publish('toggleChecklist', checkbox.getAttribute('data-id'));
 }
 
 function toggleLabel(checked, label) {
@@ -134,7 +151,7 @@ function updateTaskFormView(task) {
 }
 
 function completeTaskDOM(task) {
-    const taskDiv = document.getElementById(task.id);
+    const taskDiv = document.querySelector(`[data-id="${task.id}"]`);
     if (task.done) {
         taskDiv.style.opacity = 0.5;
     } else {
@@ -150,7 +167,7 @@ function displayTaskInProject() {       // INCOMPLETE
 function displayProjects(projects) {
     for (const project of projects) {
         if (project.metaData.title === "allTasks") continue
-        const projectName = DOMFactory('h3', {id: project.metaData.id , className: "projectName",
+        const projectName = DOMFactory('h3', {"data-id": project.metaData.id , className: "projectName",
                                               textContent: `${project.metaData.title}`});
         const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProjectButton",
                                                              textContent: `Add Task in ${project.metaData.title}`})
