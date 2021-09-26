@@ -17,7 +17,7 @@ const taskModule = {
 const allTasks = TaskManager('All Tasks');
 const allProjects = ProjectManager();
 allProjects.add(allTasks);
-
+console.log(allProjects)
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                           form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
@@ -40,14 +40,16 @@ function deleteTask(taskId) {
     //for (let i = 0; i<allProjects.projectArray.length; i++) {
       //  allProjects.projectArray[i].remove(taskId)
     //}
-    allProjects.projectArray.forEach(project => project.remove(taskId));
+    //allProjects.projectArray.forEach(project => project.remove(taskId));
+    const req = allProjects.findWithTaskId(taskId);
+    req.remove(taskId);
     console.log(allProjects)
     //allTasks.remove(taskId);
 }
 
 function sendRequiredTask(taskId) {
-    pubsub.publish('updateThisTask', allTasks.find(taskId));
-    allTasks.remove(taskId);
+    pubsub.publish('updateThisTask', [allProjects.findWithTaskId(taskId), allProjects.findWithTaskId(taskId).find(taskId)]);
+    deleteTask(taskId);
 }
 
 function toggleChecklistChecked(itemId) {

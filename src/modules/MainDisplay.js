@@ -129,8 +129,8 @@ function toggleLabel(checked, label) {
     return label.style.opacity = 1;
 }
 
-function updateTaskFormView(task) {
-    const formSection = createTaskForm('Task');
+function updateTaskFormView([project, task]) {
+    const formSection = createTaskForm('Task', project.metaData.id);
     document.body.append(formSection);
     const form = formSection.firstChild;
     const submitButton = document.getElementById('submitButtonTask');
