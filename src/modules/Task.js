@@ -4,7 +4,6 @@ import { pubsub } from './Pubsub.js';
 const taskModule = {
     execute: function() {
         listeners();
-        //pubsub.publish('initializeDOM', allTasks.metaData)
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
         pubsub.subscribe('requireEditData', sendRequiredData);
@@ -28,12 +27,15 @@ function listeners() {
         cacheDOM: function() {
             this.taskSidebar = document.getElementById('taskSidebar');
             this.projectSidebar = document.getElementById('projectSidebar');
+            this.homeSidebar = document.getElementById('homeSidebar');
         },
         bindEvents: function() {
             this.taskSidebar.addEventListener('click', () => 
                     pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks')));
             this.projectSidebar.addEventListener('click', () => 
                     pubsub.publish('projectSidebarClicked', allProjects.projectArray));
+            this.homeSidebar.addEventListener('click', () => 
+                    pubsub.publish('homeSidebarClicked', allProjects.projectArray));
         }
     }
     listenersObject.init();
@@ -56,7 +58,6 @@ function createProject(form) {
                                    form['inputProjectDueDate'].value);
     allProjects.add(project);
     pubsub.publish('addProjectSidebar', project.title);
-    //pubsub.publish('addProjectDOM', project.metaData);
 }
 
 function deleteTask(taskId) {

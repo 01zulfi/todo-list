@@ -9,6 +9,7 @@ function getData() {
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProject);
+    pubsub.subscribe('homeSidebarClicked', displayHome);
     pubsub.subscribe('taskSidebarClicked', displayAllTasks);
     pubsub.subscribe('projectSidebarClicked', displayAllProjects);
     pubsub.subscribe('addProjectSidebar', addProjectSidebar);
@@ -18,7 +19,12 @@ function log(data) {
     console.log(data);
 }
 
-//pubsub.subscribe('initializeDOM', createProjectDOM);
+function displayHome(projects) {
+    clearSections();
+    for (const project of projects) {
+        createProjectDOM(project);
+    }
+}
 
 function displayAllTasks(allTasks) {
     clearSections();
@@ -42,6 +48,7 @@ function addProjectSidebar(projectTitle) {
     const menuAndTitleDiv = document.querySelector('.menuAndTitleDiv');
     const projectTitleDiv = DOMFactory('div', {id: projectTitle, textContent: projectTitle});
     menuAndTitleDiv.append(projectTitleDiv);
+    projectTitleDiv.addEventListener('click', () => document.querySelector(".headerText").textContent = projectTitle)
     projectTitleDiv.addEventListener('click', (e) => pubsub.publish('requireProjectForDisplay', e.target.id));
 }
 
@@ -49,9 +56,18 @@ function addProjectSidebar(projectTitle) {
 function createProjectDOM(project) {
     const main = document.querySelector('.main');
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
-    const projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
-    const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
-                                                         textContent: `Add Task in ${project.title}`});
+    let projectHeading;
+    let addTaskInProjectButton;
+    if (project.title === "All Tasks") {
+        projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: ""});
+        addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
+                                                             textContent: `Add Task`});
+    } else {
+        projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
+        addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
+                                                             textContent: `Add Task in ${project.title}`});
+    }
+
     projectSection.append(projectHeading, addTaskInProjectButton);
     main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);

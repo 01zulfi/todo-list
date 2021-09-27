@@ -11,14 +11,13 @@ const initDisplayObject = {
         this.menuAndTitleDiv = DOMFactory('div', {className: "menuAndTitleDiv"});
         this.title = DOMFactory('h2', {className: "appTitle", textContent:"T O D O"});
         this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
-        this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv', textContent: 'Home'});
+        this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "homeSidebar", textContent: 'Home'});
         this.taskSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "taskSidebar",textContent: 'Tasks'});
         this.projectSidebar = DOMFactory('div', {className: "sidebarDiv", id: "projectSidebar", textContent: "Projects"});
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
         this.main = DOMFactory('div', {className: "main"});
         this.header = DOMFactory('div', {className: "header"});
         this.headerText = DOMFactory('h1', {className: "headerText", textContent: "Home"});
-        //this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
     appendContent: function() {
         this.menuAndTitleDiv.append(this.title, this.menuButton, this.homeSidebar, this.taskSidebar, this.projectSidebar,
@@ -26,15 +25,15 @@ const initDisplayObject = {
         this.header.append(this.headerText);
         this.main.append(this.header);
         document.body.append(this.menuAndTitleDiv, this.main);
-        //document.body.append(this.projectForm);
     },
     bindEvents: function() {
-        //this.menuButton.addEventListener('click', this.openMenu.bind(initDisplayObject));
-        //this.taskSidebar.addEventListener('click', this.displayTasks.bind(initDisplayObject));
+        this.homeSidebar.addEventListener('click', this.changeHeader.bind(initDisplayObject));
+        this.taskSidebar.addEventListener('click', this.changeHeader.bind(initDisplayObject));
+        this.projectSidebar.addEventListener('click', this.changeHeader.bind(initDisplayObject));
         this.addProjectButton.addEventListener('click', this.openProjectForm);
     },
-    openMenu: function() {
-        this.menuAndTitleDiv.append(this.addProjectButton);
+    changeHeader: function(event) {
+        this.headerText.textContent = event.target.textContent;
     },
     openProjectForm: function() {
         if (!createProjectForm()) return
