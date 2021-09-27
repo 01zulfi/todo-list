@@ -11,7 +11,12 @@ const taskModule = {
         pubsub.subscribe('toggleChecklist', toggleChecklistChecked);
         pubsub.subscribe('toggleCompleteTask', toggleCompleteTask);
         pubsub.subscribe('addProject', createProject);
+        pubsub.subscribe('requireProjectForDisplay', sendRequiredProject);
     }
+}
+
+function sendRequiredProject(projectTitle) {
+    pubsub.publish('addProjectDOM', allProjects.findWithTitle(projectTitle).metaData);
 }
 
 function listeners() {
@@ -24,7 +29,8 @@ function listeners() {
             this.taskSidebar = document.getElementById('taskSidebar');
         },
         bindEvents: function() {
-            this.taskSidebar.addEventListener('click', () => pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks').metaData));
+            this.taskSidebar.addEventListener('click', () => 
+                    pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks').metaData));
         }
     }
     listenersObject.init();
@@ -46,7 +52,8 @@ function createProject(form) {
     const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
                                    form['inputProjectDueDate'].value);
     allProjects.add(project);
-    pubsub.publish('addProjectDOM', project.metaData);
+    pubsub.publish('addProjectSidebar', project.metaData.title);
+    //pubsub.publish('addProjectDOM', project.metaData);
 }
 
 function deleteTask(taskId) {

@@ -10,6 +10,7 @@ function getData() {
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', createProjectDOM);
     pubsub.subscribe('taskSidebarClicked', displayAllTasks);
+    pubsub.subscribe('addProjectSidebar', addProjectSidebar);
 }
 
 function log(data) {
@@ -22,19 +23,34 @@ function displayAllTasks(allTasks) {
     createProjectDOM(allTasks);
 }
 
+function addProjectSidebar(projectTitle) {
+    const projectSidebar = document.getElementById('projectSidebar');
+    const projectTitleDiv = DOMFactory('div', {id: projectTitle, textContent: projectTitle});
+    projectSidebar.append(projectTitleDiv);
+    projectTitleDiv.addEventListener('click', (e) => pubsub.publish('requireProjectForDisplay', e.target.id));
+}
+
 
 function createProjectDOM(project) {
+    const main = document.querySelector('.main');
+    clearSections(main);
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
     const projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
     const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
                                                          textContent: `Add Task in ${project.title}`});
     projectSection.append(projectHeading, addTaskInProjectButton);
-    document.querySelector('.main').append(projectSection);
+    main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
         if (!createTaskForm()) return
         const formSection = createTaskForm('Task', this.parentNode.getAttribute('data-id'));
         this.parentNode.append(formSection);
+    }
+}
+
+function clearSections(main) {
+    while (main.querySelector("section")) {
+        main.lastChild.remove();
     }
 }
 
