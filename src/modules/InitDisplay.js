@@ -21,8 +21,8 @@ const initDisplayObject = {
         //this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
     appendContent: function() {
-        this.projectSidebar.append(this.addProjectButton);
-        this.menuAndTitleDiv.append(this.title, this.menuButton, this.homeSidebar, this.taskSidebar, this.projectSidebar);
+        this.menuAndTitleDiv.append(this.title, this.menuButton, this.homeSidebar, this.taskSidebar, this.projectSidebar,
+                                    this.addProjectButton);
         this.header.append(this.headerText);
         this.main.append(this.header);
         document.body.append(this.menuAndTitleDiv, this.main);

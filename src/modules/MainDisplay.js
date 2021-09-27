@@ -8,8 +8,9 @@ function getData() {
     pubsub.subscribe('editThisData', updateTaskFormView);
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
     pubsub.subscribe('addProjectDOM', log);
-    pubsub.subscribe('addProjectDOM', createProjectDOM);
+    pubsub.subscribe('addProjectDOM', displayProject);
     pubsub.subscribe('taskSidebarClicked', displayAllTasks);
+    pubsub.subscribe('projectSidebarClicked', displayAllProjects);
     pubsub.subscribe('addProjectSidebar', addProjectSidebar);
 }
 
@@ -20,20 +21,33 @@ function log(data) {
 //pubsub.subscribe('initializeDOM', createProjectDOM);
 
 function displayAllTasks(allTasks) {
+    clearSections();
     createProjectDOM(allTasks);
 }
 
+function displayProject(project) {
+    clearSections();
+    createProjectDOM(project);
+}
+
+function displayAllProjects(projects) {
+    clearSections()
+    for (const project of projects) {
+        if (project.metaData.title === "All Tasks") continue
+        createProjectDOM(project.metaData);
+    }
+}
+
 function addProjectSidebar(projectTitle) {
-    const projectSidebar = document.getElementById('projectSidebar');
+    const menuAndTitleDiv = document.querySelector('.menuAndTitleDiv');
     const projectTitleDiv = DOMFactory('div', {id: projectTitle, textContent: projectTitle});
-    projectSidebar.append(projectTitleDiv);
+    menuAndTitleDiv.append(projectTitleDiv);
     projectTitleDiv.addEventListener('click', (e) => pubsub.publish('requireProjectForDisplay', e.target.id));
 }
 
 
 function createProjectDOM(project) {
     const main = document.querySelector('.main');
-    clearSections(main);
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
     const projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
     const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
@@ -48,7 +62,8 @@ function createProjectDOM(project) {
     }
 }
 
-function clearSections(main) {
+function clearSections() {
+    const main = document.querySelector('.main');
     while (main.querySelector("section")) {
         main.lastChild.remove();
     }

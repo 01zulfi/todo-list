@@ -27,10 +27,13 @@ function listeners() {
         },
         cacheDOM: function() {
             this.taskSidebar = document.getElementById('taskSidebar');
+            this.projectSidebar = document.getElementById('projectSidebar');
         },
         bindEvents: function() {
             this.taskSidebar.addEventListener('click', () => 
                     pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks').metaData));
+            this.projectSidebar.addEventListener('click', () => 
+                    pubsub.publish('projectSidebarClicked', allProjects.projectArray));
         }
     }
     listenersObject.init();
