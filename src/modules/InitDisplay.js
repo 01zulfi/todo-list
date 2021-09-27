@@ -8,22 +8,39 @@ const initDisplayObject = {
         this.bindEvents();
     },
     createElements: function() {
+        this.menuAndTitleDiv = DOMFactory('div', {className: "menuAndTitleDiv"});
         this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
+        this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
+        this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv', textContent: 'Home'});
+        this.taskSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "taskSidebar",textContent: 'Tasks'});
+        this.projectSidebar = DOMFactory('div', {className: "sidebarDiv", textContent: "Projects"});
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
+        this.main = DOMFactory('div', {className: "main"});
+        this.header = DOMFactory('div', {className: "header"});
+        this.headerText = DOMFactory('div', {className: "headerText", textContent: "Home"});
         this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
     appendContent: function() {
-        document.body.append(this.title);
-        document.body.append(this.addProjectButton);
+        this.projectSidebar.append(this.addProjectButton);
+        this.menuAndTitleDiv.append(this.title, this.menuButton, this.homeSidebar, this.taskSidebar, this.projectSidebar);
+        this.header.append(this.headerText);
+        this.main.append(this.header);
+        document.body.append(this.menuAndTitleDiv, this.main);
         document.body.append(this.projectForm);
     },
     bindEvents: function() {
+        //this.menuButton.addEventListener('click', this.openMenu.bind(initDisplayObject));
+        //this.taskSidebar.addEventListener('click', this.displayTasks.bind(initDisplayObject));
         this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
+    },
+    openMenu: function() {
+        this.menuAndTitleDiv.append(this.addProjectButton);
     },
     openProjectForm: function() {
         this.projectForm.style.display = "block";
     },
 };
+
 
 function createTaskForm(version, name) {
     const formSection = DOMFactory('section', {id: `section${version}Form`, className: version});

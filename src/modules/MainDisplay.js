@@ -9,13 +9,19 @@ function getData() {
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
     pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', createProjectDOM);
+    pubsub.subscribe('taskSidebarClicked', displayAllTasks);
 }
 
 function log(data) {
     console.log(data);
 }
 
-pubsub.subscribe('initializeDOM', createProjectDOM);
+//pubsub.subscribe('initializeDOM', createProjectDOM);
+
+function displayAllTasks(allTasks) {
+    createProjectDOM(allTasks);
+}
+
 
 function createProjectDOM(project) {
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
@@ -23,7 +29,7 @@ function createProjectDOM(project) {
     const addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
                                                          textContent: `Add Task in ${project.title}`});
     projectSection.append(projectHeading, addTaskInProjectButton);
-    document.body.append(projectSection);
+    document.querySelector('.main').append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
         const formSection = createTaskForm('Task', this.parentNode.getAttribute('data-id'));

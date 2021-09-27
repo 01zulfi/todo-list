@@ -3,7 +3,8 @@ import { pubsub } from './Pubsub.js';
 
 const taskModule = {
     execute: function() {
-        pubsub.publish('initializeDOM', allTasks.metaData)
+        eventListeners();
+        //pubsub.publish('initializeDOM', allTasks.metaData)
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
         pubsub.subscribe('requireEditData', sendRequiredData);
@@ -12,6 +13,23 @@ const taskModule = {
         pubsub.subscribe('addProject', createProject);
     }
 }
+
+function eventListeners() {
+    const eventListenersObject = {
+        init: function() {
+            this.cacheDOM();
+            this.bindEvents();
+        },
+        cacheDOM: function() {
+            this.taskSidebar = document.getElementById('taskSidebar');
+        },
+        bindEvents: function() {
+            this.taskSidebar.addEventListener('click', () => pubsub.publish('taskSidebarClicked', allTasks.metaData));
+        }
+    }
+    eventListenersObject.init();
+}
+
 
 const allTasks = TaskManager('All Tasks');
 const allProjects = ProjectManager();
