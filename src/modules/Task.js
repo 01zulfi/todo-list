@@ -3,7 +3,7 @@ import { pubsub } from './Pubsub.js';
 
 const taskModule = {
     execute: function() {
-        eventListeners();
+        listeners();
         //pubsub.publish('initializeDOM', allTasks.metaData)
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
@@ -14,8 +14,8 @@ const taskModule = {
     }
 }
 
-function eventListeners() {
-    const eventListenersObject = {
+function listeners() {
+    const listenersObject = {
         init: function() {
             this.cacheDOM();
             this.bindEvents();
@@ -24,17 +24,15 @@ function eventListeners() {
             this.taskSidebar = document.getElementById('taskSidebar');
         },
         bindEvents: function() {
-            this.taskSidebar.addEventListener('click', () => pubsub.publish('taskSidebarClicked', allTasks.metaData));
+            this.taskSidebar.addEventListener('click', () => pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks').metaData));
         }
     }
-    eventListenersObject.init();
+    listenersObject.init();
 }
 
-
-const allTasks = TaskManager('All Tasks');
 const allProjects = ProjectManager();
-allProjects.add(allTasks);
-console.log(allProjects)
+allProjects.add(TaskManager('All Tasks'));
+console.log(allProjects);
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                           form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
@@ -45,18 +43,15 @@ function createTask(form) {
 }
 
 function createProject(form) {
-    console.log(form)
     const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
                                    form['inputProjectDueDate'].value);
     allProjects.add(project);
     pubsub.publish('addProjectDOM', project.metaData);
-    console.log(allProjects.projectArray);
 }
 
 function deleteTask(taskId) {
     const task = allProjects.findWithTaskId(taskId);
     task.remove(taskId);
-    console.log(allProjects);
 }
 
 function sendRequiredData(taskId) {
@@ -65,7 +60,6 @@ function sendRequiredData(taskId) {
 }
 
 function toggleChecklistChecked([itemId, taskId]) {
-    console.log(taskId);
     const task = allProjects.getTaskWithTaskId(taskId);
     const targetChecklistObj = task.findChecklistItem(itemId);
     console.log(task);

@@ -9,7 +9,7 @@ const initDisplayObject = {
     },
     createElements: function() {
         this.menuAndTitleDiv = DOMFactory('div', {className: "menuAndTitleDiv"});
-        this.title = DOMFactory('h1', {className: "appTitle", textContent:"T O D O"});
+        this.title = DOMFactory('h2', {className: "appTitle", textContent:"T O D O"});
         this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
         this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv', textContent: 'Home'});
         this.taskSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "taskSidebar",textContent: 'Tasks'});
@@ -17,8 +17,8 @@ const initDisplayObject = {
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
         this.main = DOMFactory('div', {className: "main"});
         this.header = DOMFactory('div', {className: "header"});
-        this.headerText = DOMFactory('div', {className: "headerText", textContent: "Home"});
-        this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
+        this.headerText = DOMFactory('h1', {className: "headerText", textContent: "Home"});
+        //this.projectForm = createProjectForm(); //this.projectFrom is a <section> (<form> is the first child)
     },
     appendContent: function() {
         this.projectSidebar.append(this.addProjectButton);
@@ -26,24 +26,26 @@ const initDisplayObject = {
         this.header.append(this.headerText);
         this.main.append(this.header);
         document.body.append(this.menuAndTitleDiv, this.main);
-        document.body.append(this.projectForm);
+        //document.body.append(this.projectForm);
     },
     bindEvents: function() {
         //this.menuButton.addEventListener('click', this.openMenu.bind(initDisplayObject));
         //this.taskSidebar.addEventListener('click', this.displayTasks.bind(initDisplayObject));
-        this.addProjectButton.addEventListener('click', this.openProjectForm.bind(initDisplayObject));
+        this.addProjectButton.addEventListener('click', this.openProjectForm);
     },
     openMenu: function() {
         this.menuAndTitleDiv.append(this.addProjectButton);
     },
     openProjectForm: function() {
-        this.projectForm.style.display = "block";
+        if (!createProjectForm()) return
+        document.body.append(createProjectForm());
     },
 };
 
 
 function createTaskForm(version, name) {
-    const formSection = DOMFactory('section', {id: `section${version}Form`, className: version});
+    if (document.querySelector('.formModal')) return
+    const formSection = DOMFactory('section', {id: `section${version}Form`, className: "formModal"});
     const formObject = {
         init: function() {
             this.createElements();
@@ -51,6 +53,7 @@ function createTaskForm(version, name) {
             this.bindEvents();
         },
         createElements: function() {
+            this.header = DOMFactory('h2', {textContent: "Create a new task"});
             this.form = DOMFactory('form', {id: `form${version}`, name: name});
             this.inputTaskTitle = DOMFactory('input', {id: `input${version}Title`, name: `inputTaskName`,
                                                        type: "text", maxLength: "50", placeholder: "task title...",
@@ -68,7 +71,7 @@ function createTaskForm(version, name) {
         appendElements: function() {
             this.form.append(this.inputTaskTitle, this.inputTaskDesc, this.inputTaskDueDate, this.inputTaskPriority,
                              this.addTaskChecklistButton, this.submitButton);
-            formSection.append(this.form);
+            formSection.append(this.header, this.form);
         },
         bindEvents: function() {
             this.form.addEventListener('submit', this.publishData.bind(formObject));
@@ -110,7 +113,8 @@ function createTaskForm(version, name) {
 }
 
 function createProjectForm() {
-    const formSection = DOMFactory('section', {className: "projectFormSection", style: "display: none"});
+    if (document.querySelector('.formModal')) return
+    const formSection = DOMFactory('section', {id: "projectFormSection", className: "formModal"});
     const formObject = {
         init: function() {
             this.createElements();
@@ -118,6 +122,7 @@ function createProjectForm() {
             this.bindEvents();
         },
         createElements: function() {
+            this.header = DOMFactory('h2', {textContent: "Create a new project"});
             this.form = DOMFactory('form', {id: "projectForm"});
             this.inputProjectTitle = DOMFactory('input', {id: "inputProjectTitle", name: "inputProjectTitle", type: "text",
                                                           placeholder: "project title...", required: "true"});
@@ -129,7 +134,7 @@ function createProjectForm() {
         },
         appendElements: function() {        
             this.form.append(this.inputProjectTitle, this.inputProjectDesc, this.inputProjectDueDate, this.submitButton);
-            formSection.append(this.form);
+            formSection.append(this.header, this.form);
         },
         bindEvents: function() {
             this.form.addEventListener('submit', this.publishData.bind(formObject));
@@ -141,7 +146,7 @@ function createProjectForm() {
         formFunction: function(event) {
             event.preventDefault();
             this.form.reset();
-            formSection.style.display = "none";            
+            formSection.remove();            
         }
     }
     formObject.init();

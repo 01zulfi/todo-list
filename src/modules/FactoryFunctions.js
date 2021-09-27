@@ -121,6 +121,9 @@ const ProjectManager = function() {
         find(id) {
             return projects.find(project => project.metaData.id === id)
         },
+        findWithTitle(title) {
+            return projects.find(project => project.metaData.title === title)
+        },
         findWithTaskId(taskId) {
             return projects.find(project => project.find(taskId));
         },

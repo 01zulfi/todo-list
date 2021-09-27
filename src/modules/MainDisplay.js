@@ -32,6 +32,7 @@ function createProjectDOM(project) {
     document.querySelector('.main').append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
+        if (!createTaskForm()) return
         const formSection = createTaskForm('Task', this.parentNode.getAttribute('data-id'));
         this.parentNode.append(formSection);
     }
@@ -136,7 +137,7 @@ function toggleLabel(checked, label) {
 function updateTaskFormView([project, task]) {
     const formSection = createTaskForm('Task', project.metaData.id);
     document.body.append(formSection);
-    const form = formSection.firstChild;
+    const form = formSection.lastChild;
     const submitButton = document.getElementById('submitButtonTask');
     form.elements[0].value = task.title;
     form.elements[1].value = task.description;
