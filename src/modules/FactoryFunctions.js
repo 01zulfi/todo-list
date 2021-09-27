@@ -90,21 +90,17 @@ const TaskManager = function(title, description, dueDate) {
         get taskArray() {
             return [...tasks]
         },
-        get metaData() {
-            return {
-                get title() {
-                    return project.title
-                },
-                get description() {
-                    return project.description
-                },
-                get dueDate() {
-                    return project.dueDate
-                },
-                get id() {
-                    return project.id
-                },
-            }
+        get title() {
+            return project.title
+        },
+        get description() {
+            return project.description
+        },
+        get dueDate() {
+            return project.dueDate
+        },
+        get id() {
+            return project.id
         },
     }
 }
@@ -116,13 +112,13 @@ const ProjectManager = function() {
             projects = [...projects, project];
         },
         remove(id) {
-            projects = projects.filter(project => project.metaData.id !== id);
+            projects = projects.filter(project => project.id !== id);
         },
         find(id) {
-            return projects.find(project => project.metaData.id === id)
+            return projects.find(project => project.id === id)
         },
         findWithTitle(title) {
-            return projects.find(project => project.metaData.title === title)
+            return projects.find(project => project.title === title)
         },
         findWithTaskId(taskId) {
             return projects.find(project => project.find(taskId));

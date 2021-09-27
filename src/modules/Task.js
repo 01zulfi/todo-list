@@ -16,7 +16,7 @@ const taskModule = {
 }
 
 function sendRequiredProject(projectTitle) {
-    pubsub.publish('addProjectDOM', allProjects.findWithTitle(projectTitle).metaData);
+    pubsub.publish('addProjectDOM', allProjects.findWithTitle(projectTitle));
 }
 
 function listeners() {
@@ -31,7 +31,7 @@ function listeners() {
         },
         bindEvents: function() {
             this.taskSidebar.addEventListener('click', () => 
-                    pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks').metaData));
+                    pubsub.publish('taskSidebarClicked', allProjects.findWithTitle('All Tasks')));
             this.projectSidebar.addEventListener('click', () => 
                     pubsub.publish('projectSidebarClicked', allProjects.projectArray));
         }
@@ -55,7 +55,7 @@ function createProject(form) {
     const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
                                    form['inputProjectDueDate'].value);
     allProjects.add(project);
-    pubsub.publish('addProjectSidebar', project.metaData.title);
+    pubsub.publish('addProjectSidebar', project.title);
     //pubsub.publish('addProjectDOM', project.metaData);
 }
 

@@ -33,8 +33,8 @@ function displayProject(project) {
 function displayAllProjects(projects) {
     clearSections()
     for (const project of projects) {
-        if (project.metaData.title === "All Tasks") continue
-        createProjectDOM(project.metaData);
+        if (project.title === "All Tasks") continue
+        createProjectDOM(project);
     }
 }
 
@@ -60,6 +60,7 @@ function createProjectDOM(project) {
         const formSection = createTaskForm('Task', this.parentNode.getAttribute('data-id'));
         this.parentNode.append(formSection);
     }
+    if (project.taskArray.length !== 0) displayTasks(project)
 }
 
 function clearSections() {
@@ -70,7 +71,7 @@ function clearSections() {
 }
 
 function displayTasks(project) {
-    const projectSection = document.querySelector(`[data-id="${project.metaData.id}"]`);
+    const projectSection = document.querySelector(`[data-id="${project.id}"]`);
     deleteAllTasks(projectSection);
     const tasks = project.taskArray;
     for (const task of tasks) {
@@ -166,7 +167,7 @@ function toggleLabel(checked, label) {
 }
 
 function updateTaskFormView([project, task]) {
-    const formSection = createTaskForm('Task', project.metaData.id);
+    const formSection = createTaskForm('Task', project.id);
     document.body.append(formSection);
     const form = formSection.lastChild;
     const submitButton = document.getElementById('submitButtonTask');
