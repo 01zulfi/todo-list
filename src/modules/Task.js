@@ -3,7 +3,10 @@ import { pubsub } from './Pubsub.js';
 
 const taskModule = {
     execute: function() {
+        //getLocalStorage();
+        storeLocalEvent();
         listeners();
+        pubsub.publish('pageLoad', allProjects.projectArray);
         pubsub.subscribe('addTask', createTask);
         pubsub.subscribe('deleteTask', deleteTask);
         pubsub.subscribe('requireEditData', sendRequiredData);
@@ -12,6 +15,33 @@ const taskModule = {
         pubsub.subscribe('addProject', createProject);
         pubsub.subscribe('requireProjectForDisplay', sendRequiredProject);
     }
+}
+
+function getLocalStorage() {
+    for (let i = 0; i < localStorage.length; i++) {
+        const data = JSON.parse(localStorage.getItem(`Project${i}`));
+        allProjects.add(data);
+    }
+}
+
+function storeLocal(data) {     // TASK AND PROJECT PASSED THROUGH FACTORIES IN FUNCTIONS: createTask() createProject()
+    console.log(data);          // TASK need: title desc dueDate priority checklist 
+    localStorage.clear();       // PROJECT need: title desc dueDate    
+    for (let i = 0; i < data.length; i++) {
+        console.log(data[i].title);
+        
+        for (let j = 0; j < data[i].length; j++) {
+            const task = localStorage.setItem
+        }
+        console.log(JSON.stringify(data[i]));
+        localStorage.setItem(`Project${i}`, JSON.stringify(data[i]));
+    }
+    console.log(JSON.parse(localStorage.getItem(`Project0`)));
+    //localStorage.setItem('Projects', JSON.stringify(data));
+}
+
+function storeLocalEvent() {
+    window.addEventListener('click', () => storeLocal(allProjects.projectArray));
 }
 
 function sendRequiredProject(projectTitle) {
@@ -43,7 +73,7 @@ function listeners() {
 
 const allProjects = ProjectManager();
 allProjects.add(TaskManager('All Tasks'));
-console.log(allProjects);
+console.log(allProjects.projectArray);
 function createTask(form) {
     const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                           form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));

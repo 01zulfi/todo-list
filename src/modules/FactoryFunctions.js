@@ -65,7 +65,9 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         set done(value) {
             task.done = value;
         },
-        task
+        // get whole() {
+        //     return task
+        // }
     }
 }
 
@@ -102,6 +104,9 @@ const TaskManager = function(title, description, dueDate) {
         get id() {
             return project.id
         },
+        // get whole() {
+        //     return project
+        // }
     }
 }
 

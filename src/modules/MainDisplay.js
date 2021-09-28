@@ -3,11 +3,13 @@ import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
 
 function getData() {
-    pubsub.subscribe('addTaskDOM', log);
+
+    //pubsub.subscribe('addTaskDOM', log);
+    pubsub.subscribe('pageLoad', displayHome);
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('editThisData', updateTaskFormView);
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
-    pubsub.subscribe('addProjectDOM', log);
+    //pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProject);
     pubsub.subscribe('homeSidebarClicked', displayHome);
     pubsub.subscribe('taskSidebarClicked', displayAllTasks);
@@ -15,10 +17,11 @@ function getData() {
     pubsub.subscribe('addProjectSidebar', addProjectSidebar);
 }
 
+
 function log(data) {
     console.log(data);
 }
-
+pubsub.subscribe('pageLoad', displayHome);
 function displayHome(projects) {
     clearSections();
     for (const project of projects) {
