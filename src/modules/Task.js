@@ -13,6 +13,7 @@ const taskModule = {
         pubsub.subscribe('toggleCompleteTask', toggleCompleteTask);
         pubsub.subscribe('addProject', createProject);
         pubsub.subscribe('requireProjectForDisplay', sendRequiredProject);
+        pubsub.subscribe('toggleCompleteProject', toggleCompleteProject);
     }
 }
 
@@ -59,7 +60,7 @@ function storeLocal(data) {
     localStorage.clear();
     let i = 1;
     for (const project of data) {   
-        localStorage.setItem(`Project: ${i};`, JSON.stringify([project.title, project.description, project.dueDate]));
+        localStorage.setItem(`Project: ${i};`, JSON.stringify([project.title, project.description, project.done]));
         let j = 1; 
         for (const task of project.taskArray) {
             localStorage.setItem(`Project: ${i}; Task: ${j}`, JSON.stringify([task.title, task.description, task.dueDate,
@@ -153,6 +154,17 @@ function toggleCompleteTask(taskId) {
         completedTask.done = true;
     }
     pubsub.publish('toggleCompleteTaskDOM', completedTask);
+    storeLocal(allProjects.projectArray);
+}
+
+function toggleCompleteProject(projectId) {
+    const completedProject = allProjects.find(projectId);
+    if (completedProject.done) {
+        completedProject.done = false;
+    } else {
+        completedProject.done = true;
+    }
+    pubsub.publish('toggleCompleteProjectDOM', completedProject);
     storeLocal(allProjects.projectArray);
 }
 

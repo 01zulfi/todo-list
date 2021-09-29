@@ -11,6 +11,7 @@ function getData() {
     pubsub.subscribe('taskSidebarClicked', displayAllTasks);
     pubsub.subscribe('projectSidebarClicked', displayAllProjects);
     pubsub.subscribe('addProjectSidebar', addProjectSidebar);
+    pubsub.subscribe('toggleCompleteProjectDOM', completeProjectDOM);
 }
 
 
@@ -57,6 +58,11 @@ function addProjectSidebar(projectTitle) {
 function createProjectDOM(project) {
     const main = document.querySelector('.main');
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
+    if (project.done) {
+        projectSection.style.opacity = 0.5;
+    } else {
+        projectSection.style.opacity = 1;
+    }
     let projectHeading;
     let addTaskInProjectButton;
     if (project.title === "All Tasks") {
@@ -67,9 +73,13 @@ function createProjectDOM(project) {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
         addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
                                                              textContent: `Add Task in ${project.title}`});
-    }
 
-    projectSection.append(projectHeading, addTaskInProjectButton);
+    }
+    const completeProjectButton = DOMFactory('button', {className: "completeProjectButton",
+                                                        textContent: "Complete"});
+    completeProjectButton.addEventListener('click', (e) => pubsub.publish('toggleCompleteProject',
+                                                     e.target.parentNode.getAttribute("data-id")))
+    projectSection.append(projectHeading, addTaskInProjectButton, completeProjectButton);
     main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
@@ -210,6 +220,15 @@ function completeTaskDOM(task) {
         taskDiv.style.opacity = 0.5;
     } else {
         taskDiv.style.opacity = 1;
+    }
+}
+
+function completeProjectDOM(project) {
+    const projectSection = document.querySelector(`[data-id="${project.id}"]`);
+    if (project.done) {
+        projectSection.style.opacity = 0.5;
+    } else {
+        projectSection.style.opacity = 1;
     }
 }
 

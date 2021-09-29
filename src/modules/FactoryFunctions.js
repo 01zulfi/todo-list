@@ -82,11 +82,14 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
     }
 }
 
-const TaskManager = function([title, description]) {
+const TaskManager = function([title, description, done]) {
     const project = {
         title,
         description,
-        dueDate,
+        done: (() => {
+            if (done) return true
+            return false
+        })(),
         id: uniqueId(),
     }
     let tasks = [];
@@ -112,6 +115,12 @@ const TaskManager = function([title, description]) {
         get id() {
             return project.id
         },
+        get done() {
+            return project.done
+        },
+        set done(value) {
+            project.done = value;
+        }
     }
 }
 
