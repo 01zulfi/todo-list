@@ -65,21 +65,28 @@ function createProjectDOM(project) {
     }
     let projectHeading;
     let addTaskInProjectButton;
+    let completeProjectButton;
+    let deleteProjectButton;
     if (project.title === "All Tasks") {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: ""});
         addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
                                                              textContent: `Add Task`});
     } else {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
-        addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
+        addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProject",
                                                              textContent: `Add Task in ${project.title}`});
-
-    }
-    const completeProjectButton = DOMFactory('button', {className: "completeProjectButton",
+        completeProjectButton = DOMFactory('button', {className: "completeProjectButton",
                                                         textContent: "Complete"});
-    completeProjectButton.addEventListener('click', (e) => pubsub.publish('toggleCompleteProject',
-                                                     e.target.parentNode.getAttribute("data-id")))
-    projectSection.append(projectHeading, addTaskInProjectButton, completeProjectButton);
+        deleteProjectButton = DOMFactory('button', {className: "deleteProjectButton", textContent: "Delete Project"});
+        completeProjectButton.addEventListener('click', (e) => pubsub.publish('toggleCompleteProject',
+        e.target.parentNode.getAttribute("data-id")))
+        deleteProjectButton.addEventListener('click', (e) => {
+            pubsub.publish('deleteProject', e.target.parentNode.getAttribute('data-id'));
+            e.target.parentNode.remove();
+        })
+    }
+
+    projectSection.append(projectHeading, addTaskInProjectButton, completeProjectButton || "", deleteProjectButton || "");
     main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {

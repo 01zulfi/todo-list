@@ -14,6 +14,7 @@ const taskModule = {
         pubsub.subscribe('addProject', createProject);
         pubsub.subscribe('requireProjectForDisplay', sendRequiredProject);
         pubsub.subscribe('toggleCompleteProject', toggleCompleteProject);
+        pubsub.subscribe('deleteProject', deleteProject);
     }
 }
 
@@ -165,6 +166,11 @@ function toggleCompleteProject(projectId) {
         completedProject.done = true;
     }
     pubsub.publish('toggleCompleteProjectDOM', completedProject);
+    storeLocal(allProjects.projectArray);
+}
+
+function deleteProject(projectId) {
+    allProjects.remove(projectId);
     storeLocal(allProjects.projectArray);
 }
 
