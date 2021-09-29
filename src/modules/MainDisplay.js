@@ -3,13 +3,9 @@ import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
 
 function getData() {
-
-    //pubsub.subscribe('addTaskDOM', log);
-    pubsub.subscribe('pageLoad', displayHome);
     pubsub.subscribe('addTaskDOM', displayTasks);
     pubsub.subscribe('editThisData', updateTaskFormView);
     pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
-    //pubsub.subscribe('addProjectDOM', log);
     pubsub.subscribe('addProjectDOM', displayProject);
     pubsub.subscribe('homeSidebarClicked', displayHome);
     pubsub.subscribe('taskSidebarClicked', displayAllTasks);

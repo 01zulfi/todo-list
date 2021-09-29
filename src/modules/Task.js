@@ -3,8 +3,7 @@ import { pubsub } from './Pubsub.js';
 
 const taskModule = {
     execute: function() {
-        //getLocalStorage();
-        storeLocalEvent();
+        getLocalStorage();
         listeners();
         pubsub.publish('pageLoad', allProjects.projectArray);
         pubsub.subscribe('addTask', createTask);
@@ -18,30 +17,58 @@ const taskModule = {
 }
 
 function getLocalStorage() {
-    for (let i = 0; i < localStorage.length; i++) {
-        const data = JSON.parse(localStorage.getItem(`Project${i}`));
-        allProjects.add(data);
+    if (localStorage.length === 0) return
+    const localStorageKeys = Object.keys(localStorage);
+    const sortedNestedArray = [];
+    for (let i = 0; i <= localStorageKeys.length; i++) {
+        const filtered = localStorageKeys.filter(key => key.slice(0, key.indexOf(';')).includes(`${i}`));
+        if (filtered.length === 0) continue
+        filtered.sort((a, b) => a.length - b.length);
+        sortedNestedArray.push(filtered);
     }
-}
-
-function storeLocal(data) {     // TASK AND PROJECT PASSED THROUGH FACTORIES IN FUNCTIONS: createTask() createProject()
-    console.log(data);          // TASK need: title desc dueDate priority checklist 
-    localStorage.clear();       // PROJECT need: title desc dueDate    
-    for (let i = 0; i < data.length; i++) {
-        console.log(data[i].title);
-        
-        for (let j = 0; j < data[i].length; j++) {
-            const task = localStorage.setItem
+    for (let i = 1; i < sortedNestedArray[0].length; i++) {
+        const project = sortedNestedArray[0].slice(); 
+        allProjects.findWithTitle('All Tasks').add(TaskItem(JSON.parse(localStorage.getItem(project[i]))));
+    }
+    for (let i = 1; i < sortedNestedArray.length; i++) {
+        let taskManager;
+        const project = sortedNestedArray[i].slice();
+        for (let j = 0; j < project.length; j++) {
+            if (j === 0) {
+                taskManager = TaskManager(JSON.parse(localStorage.getItem(project[j])));
+                continue
+            }
+            taskManager.add(TaskItem(JSON.parse(localStorage.getItem(project[j]))));
         }
-        console.log(JSON.stringify(data[i]));
-        localStorage.setItem(`Project${i}`, JSON.stringify(data[i]));
+        allProjects.add(taskManager);
     }
-    console.log(JSON.parse(localStorage.getItem(`Project0`)));
-    //localStorage.setItem('Projects', JSON.stringify(data));
 }
 
-function storeLocalEvent() {
-    window.addEventListener('click', () => storeLocal(allProjects.projectArray));
+function extractContentFromChecklist(data) {  
+    const checklistContent = [];
+    const checklistChecked = []
+    for (const item of data) {
+        checklistContent.push(item.content);
+        checklistChecked.push(item.checked);
+    }
+    return [checklistContent, checklistChecked]
+}
+
+
+function storeLocal(data) {    
+    localStorage.clear();
+    let i = 1;
+    for (const project of data) {   
+        localStorage.setItem(`Project: ${i};`, JSON.stringify([project.title, project.description, project.dueDate]));
+        let j = 1; 
+        for (const task of project.taskArray) {
+            localStorage.setItem(`Project: ${i}; Task: ${j}`, JSON.stringify([task.title, task.description, task.dueDate,
+                                                                 task.priority, 
+                                                                extractContentFromChecklist(task.checklist), task.done]));                     
+            j++;
+        }
+        i++;
+    }
 }
 
 function sendRequiredProject(projectTitle) {
@@ -72,32 +99,38 @@ function listeners() {
 }
 
 const allProjects = ProjectManager();
-allProjects.add(TaskManager('All Tasks'));
-console.log(allProjects.projectArray);
+allProjects.add(TaskManager(['All Tasks']));
+
+console.log(allProjects);
+
 function createTask(form) {
-    const task = TaskItem(form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
-                          form["inputTaskPriority"].value, document.querySelectorAll('.inputChecklist'));
+    const task = TaskItem([form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
+                          form["inputTaskPriority"].value, [document.querySelectorAll('.inputChecklist')]]);
     const id = form[0].parentNode.name;
     const targetProject = allProjects.find(id);
     targetProject.add(task);
-    pubsub.publish('addTaskDOM', targetProject)
+    pubsub.publish('addTaskDOM', targetProject);
+    storeLocal(allProjects.projectArray);
 }
 
 function createProject(form) {
-    const project = TaskManager(form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
-                                   form['inputProjectDueDate'].value);
+    const project = TaskManager([form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
+                                   form['inputProjectDueDate'].value]);
     allProjects.add(project);
     pubsub.publish('addProjectSidebar', project.title);
+    storeLocal(allProjects.projectArray);
 }
 
 function deleteTask(taskId) {
     const task = allProjects.findWithTaskId(taskId);
     task.remove(taskId);
+    storeLocal(allProjects.projectArray);
 }
 
 function sendRequiredData(taskId) {
     pubsub.publish('editThisData', [allProjects.findWithTaskId(taskId), allProjects.getTaskWithTaskId(taskId)]);
     deleteTask(taskId);
+    storeLocal(allProjects.projectArray);
 }
 
 function toggleChecklistChecked([itemId, taskId]) {
@@ -109,16 +142,19 @@ function toggleChecklistChecked([itemId, taskId]) {
     } else {
         targetChecklistObj.checked = true;
     }
+    storeLocal(allProjects.projectArray);
 }
 
 function toggleCompleteTask(taskId) {
     const completedTask = allProjects.getTaskWithTaskId(taskId);
+    
     if (completedTask.done) {
         completedTask.done = false;
     } else {
         completedTask.done = true;
     }
     pubsub.publish('toggleCompleteTaskDOM', completedTask);
+    storeLocal(allProjects.projectArray);
 }
 
 export {taskModule};

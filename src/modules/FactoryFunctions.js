@@ -15,8 +15,19 @@ const uniqueId = function() {
     return Math.floor(Math.random() * Date.now()).toString()
 }
 
-const checklist = function(items) {
+const checklist = function([items, checked]) {
     const checklist = [];
+    if (checked) {
+        for (let i = 0; i< items.length; i++) {
+            const checklistObj = {
+                content: items[i],
+                checked: checked[i],
+                id: uniqueId(),
+            }
+            checklist.push(checklistObj);
+        }
+        return checklist
+    }
     const itemsArray = Array.from(items);
     for (const item of itemsArray) {
         if (item.value === "") continue
@@ -30,7 +41,7 @@ const checklist = function(items) {
     return checklist
 }
 
-const TaskItem = function(title, description, dueDate, priority, checklistItems) {
+const TaskItem = function([title, description, dueDate, priority, checklistItems, done]) {
     const task = {
         title,
         description,
@@ -38,7 +49,10 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         priority,
         checklist: checklist(checklistItems),
         id: uniqueId(),
-        done: false,
+        done: (() => {
+            if (done) return true
+            return false
+        })(),
     }
     return {
         get title() {
@@ -65,13 +79,10 @@ const TaskItem = function(title, description, dueDate, priority, checklistItems)
         set done(value) {
             task.done = value;
         },
-        // get whole() {
-        //     return task
-        // }
     }
 }
 
-const TaskManager = function(title, description, dueDate) {
+const TaskManager = function([title, description, dueDate]) {
     const project = {
         title,
         description,
@@ -104,9 +115,6 @@ const TaskManager = function(title, description, dueDate) {
         get id() {
             return project.id
         },
-        // get whole() {
-        //     return project
-        // }
     }
 }
 
