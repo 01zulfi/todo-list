@@ -22,6 +22,8 @@ function displayHome(projects) {
     clearSections();
     for (const project of projects) {
         createProjectDOM(project);
+        if (project.title === "All Tasks") continue
+        addProjectSidebar(project.title);
     }
 }
 

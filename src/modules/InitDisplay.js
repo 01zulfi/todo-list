@@ -127,12 +127,10 @@ function createProjectForm() {
                                                           placeholder: "project title...", required: "true"});
             this.inputProjectDesc = DOMFactory('textarea', {id: "inputProjectDesc", name: "inputProjectDesc",
                                                             placeholder: "desc/notes..."});
-            this.inputProjectDueDate = DOMFactory('input', {id: "inputProjectDueDate", name: "inputProjectDueDate",
-                                                            type: "date"});
             this.submitButton = DOMFactory('button', {id: "submitButtonProject", type: "submit", textContent: "Submit"});
         },
         appendElements: function() {        
-            this.form.append(this.inputProjectTitle, this.inputProjectDesc, this.inputProjectDueDate, this.submitButton);
+            this.form.append(this.inputProjectTitle, this.inputProjectDesc, this.submitButton);
             formSection.append(this.header, this.form);
         },
         bindEvents: function() {

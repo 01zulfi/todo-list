@@ -114,8 +114,7 @@ function createTask(form) {
 }
 
 function createProject(form) {
-    const project = TaskManager([form['inputProjectTitle'].value, form['inputProjectDesc'].value, 
-                                   form['inputProjectDueDate'].value]);
+    const project = TaskManager([form['inputProjectTitle'].value, form['inputProjectDesc'].value]);
     allProjects.add(project);
     pubsub.publish('addProjectSidebar', project.title);
     storeLocal(allProjects.projectArray);

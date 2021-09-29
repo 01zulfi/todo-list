@@ -82,7 +82,7 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
     }
 }
 
-const TaskManager = function([title, description, dueDate]) {
+const TaskManager = function([title, description]) {
     const project = {
         title,
         description,
@@ -108,9 +108,6 @@ const TaskManager = function([title, description, dueDate]) {
         },
         get description() {
             return project.description
-        },
-        get dueDate() {
-            return project.dueDate
         },
         get id() {
             return project.id
