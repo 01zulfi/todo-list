@@ -1,3 +1,5 @@
+import { intervalToDuration, parseJSON } from "date-fns";
+
 const DOMFactory = function(element, attributes) {  //for simple elements
     const newElement = document.createElement(element);
     for (const attribute in attributes) {
@@ -41,7 +43,13 @@ const checklist = function([items, checked]) {
     return checklist
 }
 
+function parseDate(dueDate) {
+    const parsed = dueDate.split(/\D/);
+    return new Date(parsed[0], --parsed[1], parsed[2]);
+}
+
 const TaskItem = function([title, description, dueDate, priority, checklistItems, done]) {
+    
     const task = {
         title,
         description,
@@ -54,6 +62,7 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
             return false
         })(),
     }
+
     return {
         get title() {
             return task.title

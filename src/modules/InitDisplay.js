@@ -60,7 +60,7 @@ function createTaskForm(version, name) {
             this.inputTaskDesc = DOMFactory('textarea', {id: `input${version}Desc`, name: `inputTaskDesc`,
                                                          placeholder: "desc/notes...", });
             this.inputTaskDueDate = DOMFactory('input', {id: `input${version}DueDate`, name: `inputTaskDueDate`,
-                                                         type: "date",});
+                                                         type: "date"});
             this.inputTaskPriority = DOMFactory('input', {id: `input${version}Priority`, name: `inputTaskPriority`, type: "text", 
                                                           placeholder: "high/medium/low"});
             this.addTaskChecklistButton = DOMFactory('button', {id: `add${version}ChecklistButton`, type: "button", 
@@ -104,8 +104,7 @@ function createTaskForm(version, name) {
         },
         deleteChecklistItem: function(event) {
             event.target.parentNode.remove();
-        }
-
+        },
     }
     formObject.init();
     return formSection
