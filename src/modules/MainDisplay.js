@@ -138,13 +138,15 @@ function createTaskCard(task) {
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskChecklist = createChecklistCheckbox(task.checklist, task);
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
+            this.taskPriority = DOMFactory('p', {className: 'taskPriority', textContent: task.priority ?
+                                                        `Priority: ${task.priority}`: ""});
             this.taskComplete = DOMFactory('button',  {className: 'taskComplete', textContent: "Completed!"});
             this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task",});
             this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task",});
         },
         appendElements: function() {
-            taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskComplete,
-                           this.taskDelete, this.taskUpdate);
+            taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskPriority,
+                             this.taskComplete, this.taskDelete, this.taskUpdate);
         },
         bindEvents: function() {
             this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask',

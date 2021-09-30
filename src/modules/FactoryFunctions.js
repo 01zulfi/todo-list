@@ -46,7 +46,7 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
         title,
         description,
         dueDate,
-        priority,
+        priority: priority || "",
         checklist: checklist(checklistItems),
         id: uniqueId(),
         done: (() => {
@@ -69,6 +69,9 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
         },
         get checklist() {
             return task.checklist
+        },
+        get priority() {
+            return task.priority
         },
         findChecklistItem(id) {
             return task.checklist.find(item => item.id === id)
