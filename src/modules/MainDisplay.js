@@ -107,11 +107,13 @@ function clearSections() {
 
 function displayTasks(project) {
     const projectSection = document.querySelector(`[data-id="${project.id}"]`);
+    const taskContainer = DOMFactory('div', {className: "taskContainer"});
     deleteAllTasks(projectSection);
     const tasks = project.taskArray;
     for (const task of tasks) {
-        projectSection.append(createTaskCard(task));
+        taskContainer.append(createTaskCard(task));
     }
+    projectSection.append(taskContainer);
 }
 
 function deleteAllTasks(projectSection) {

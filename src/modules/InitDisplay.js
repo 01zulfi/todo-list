@@ -52,31 +52,46 @@ function createTaskForm(projectId) {
             this.bindEvents();
         },
         createElements: function() {
+            this.closeButton = DOMFactory('span', {className: "closeModal", textContent: 'Close'})
             this.header = DOMFactory('h2', {textContent: "Create a new task"});
             this.form = DOMFactory('form', {id: `form$Task`, "data-id": projectId});
+            this.formContainerOne = DOMFactory('div', {className: 'formContainerOne'});
+            this.formContainerTwo = DOMFactory('div', {className: 'formContainerTwo'});
             this.inputTaskTitle = DOMFactory('input', {id: `inputTaskTitle`, name: `inputTaskName`,
                                                        type: "text", maxLength: "50", placeholder: "task title...",
                                                        required: "true"});
+            this.labelTitle = DOMFactory('label', {for: "inputTaskTitle", textContent: "Task Title (required):"});
             this.inputTaskDesc = DOMFactory('textarea', {id: `inputTaskDesc`, name: `inputTaskDesc`,
-                                                         placeholder: "desc/notes...", });
+                                                         placeholder: "desc/notes...", maxLength: "500"});
+            this.labelDesc = DOMFactory('label', {for: "inputTaskDesc", textContent: "Desc/Notes:"});
             this.inputTaskDueDate = DOMFactory('input', {id: `inputTaskDueDate`, name: `inputTaskDueDate`,
                                                          type: "date"});
+            this.labelDueDate = DOMFactory('label', {for: "inputTaskDueDate", textContent: "Due Date:"});
             this.inputTaskPriority = DOMFactory('input', {id: `inputTaskPriority`, name: `inputTaskPriority`, type: "text", 
                                                           placeholder: "high/medium/low"});
+            this.labelPriority = DOMFactory('label', {for: "inputTaskPriority", textContent: "Priority: "});
             this.addTaskChecklistButton = DOMFactory('button', {id: `addTaskChecklistButton`, type: "button", 
                                                                 textContent: "Add Checklist"});
+            this.inputTaskChecklistDiv = DOMFactory('div', {className: 'inputTaskChecklistDiv'});                                                    
             this.submitButton = DOMFactory('button', {id: "submitButtonTask", type: "submit", textContent: "Submit"});
         },
         appendElements: function() {
-            this.form.append(this.inputTaskTitle, this.inputTaskDesc, this.inputTaskDueDate, this.inputTaskPriority,
-                             this.addTaskChecklistButton, this.submitButton);
-            formSection.append(this.header, this.form);
+            this.inputTaskChecklistDiv.append(this.addTaskChecklistButton);
+            this.formContainerOne.append(this.labelTitle, this.inputTaskTitle, this.labelDueDate, this.inputTaskDueDate,
+                                         this.labelPriority, this.inputTaskPriority);
+            this.formContainerTwo.append(this.labelDesc, this.inputTaskDesc, this.inputTaskChecklistDiv, this.submitButton);
+            this.form.append(this.formContainerOne, this.formContainerTwo);
+            formSection.append(this.closeButton, this.header, this.form);
         },
         bindEvents: function() {
+            this.closeButton.addEventListener('click', this.closeModal.bind(formObject));
             this.form.addEventListener('submit', this.publishData.bind(formObject));
             this.form.addEventListener('submit', this.formFunction.bind(formObject));
             this.form.addEventListener('submit', this.deleteChecklistInputs.bind(formObject));
             this.addTaskChecklistButton.addEventListener('click', this.createChecklist.bind(formObject));
+        },
+        closeModal: function() {
+            formSection.remove();
         },
         publishData: function() {
             pubsub.publish('addTask', this.form.elements);
@@ -93,13 +108,13 @@ function createTaskForm(projectId) {
             this.checklistButtons.forEach(button => button.remove());
         },
         createChecklist: function() {
-            this.inputTaskChecklistDiv = DOMFactory('div');
-            this.inputTaskChecklist = DOMFactory('input', {id: `inputTaskChecklist`, name: `inputTaskChecklist`,
+            this.inputTaskChecklistItemDiv = DOMFactory('div');
+            this.inputTaskChecklist = DOMFactory('input', {name: `inputTaskChecklist`,
                                                            className: `inputChecklist`, type: "text", disabled: false,
                                                            placeholder: "enter checklist item here..."});
-            this.inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'Del Item'});
-            this.inputTaskChecklistDiv.append(this.inputTaskChecklist, this.inputTaskChecklistDelete);
-            this.form.insertBefore(this.inputTaskChecklistDiv, this.submitButton);
+            this.inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'X'});
+            this.inputTaskChecklistItemDiv.append(this.inputTaskChecklist, this.inputTaskChecklistDelete);
+            this.inputTaskChecklistDiv.append(this.inputTaskChecklistItemDiv)
             this.inputTaskChecklistDelete.addEventListener('click', this.deleteChecklistItem.bind(formObject));
         },
         deleteChecklistItem: function(event) {
