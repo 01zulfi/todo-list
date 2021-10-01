@@ -15,19 +15,23 @@ const initDisplayObject = {
     },
     createElements: function() {
         this.menuAndTitleDiv = DOMFactory('div', {className: "menuAndTitleDiv"});
+        this.appTitleDiv = DOMFactory('div');
         this.title = DOMFactory('h2', {className: "appTitle", textContent:"T O D O"});
-        this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
+        //this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
+        this.sidebarMain = DOMFactory('div', {className: "sidebarMain"});
         this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "homeSidebar", textContent: 'Home'});
         this.taskSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "taskSidebar",textContent: 'Tasks'});
         this.projectSidebar = DOMFactory('div', {className: "sidebarDiv", id: "projectSidebar", textContent: "Projects"});
         this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
+        this.newProjectSidebar = DOMFactory('div', {className: 'newProjectSidebar'})
         this.main = DOMFactory('div', {className: "main"});
         this.header = DOMFactory('div', {className: "header"});
         this.headerText = DOMFactory('h1', {className: "headerText", textContent: "Home"});
     },
     appendContent: function() {
-        this.menuAndTitleDiv.append(this.title, this.menuButton, this.homeSidebar, this.taskSidebar, this.projectSidebar,
-                                    this.addProjectButton);
+        this.appTitleDiv.append(this.title);
+        this.sidebarMain.append(this.homeSidebar, this.taskSidebar, this.projectSidebar);
+        this.menuAndTitleDiv.append(this.appTitleDiv, this.sidebarMain, this.addProjectButton, this.newProjectSidebar);
         this.header.append(this.headerText);
         this.main.append(this.header);
         document.body.append(this.menuAndTitleDiv, this.main);

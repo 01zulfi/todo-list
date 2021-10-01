@@ -170,7 +170,9 @@ function toggleCompleteProject(projectId) {
 }
 
 function deleteProject(projectId) {
+    const projectToDeleteTitle = allProjects.find(projectId).title;
     allProjects.remove(projectId);
+    pubsub.publish('deleteProjectSidebar', projectToDeleteTitle);
     storeLocal(allProjects.projectArray);
 }
 

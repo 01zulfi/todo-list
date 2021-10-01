@@ -13,6 +13,7 @@ const mainDisplayModule = {
         pubsub.subscribe('projectSidebarClicked', displayAllProjects);
         pubsub.subscribe('addProjectSidebar', addProjectSidebar);
         pubsub.subscribe('toggleCompleteProjectDOM', completeProjectDOM);
+        pubsub.subscribe('deleteProjectSidebar', deleteProjectSidebar);
     }
 }
 
@@ -46,12 +47,16 @@ function displayAllProjects(projects) {
 }
 
 function addProjectSidebar(projectTitle) {
-    const menuAndTitleDiv = document.querySelector('.menuAndTitleDiv');
+    const newProjectSidebar = document.querySelector('.newProjectSidebar');
     if (document.getElementById(projectTitle)) return
     const projectTitleDiv = DOMFactory('div', {id: projectTitle, textContent: projectTitle});
-    menuAndTitleDiv.append(projectTitleDiv);
-    projectTitleDiv.addEventListener('click', () => document.querySelector(".headerText").textContent = projectTitle)
+    newProjectSidebar.append(projectTitleDiv);
+    projectTitleDiv.addEventListener('click', () => document.querySelector(".headerText").textContent = "Project")
     projectTitleDiv.addEventListener('click', (e) => pubsub.publish('requireProjectForDisplay', e.target.id));
+}
+
+function deleteProjectSidebar(projectTitle) {
+    document.getElementById(projectTitle).remove();
 }
 
 
