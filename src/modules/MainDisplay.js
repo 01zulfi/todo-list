@@ -91,7 +91,7 @@ function createProjectDOM(project) {
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
         if (!createTaskForm()) return
-        const formSection = createTaskForm('Task', this.parentNode.getAttribute('data-id'));
+        const formSection = createTaskForm(this.parentNode.getAttribute('data-id'));
         this.parentNode.append(formSection);
     }
     if (project.taskArray.length !== 0) displayTasks(project)
@@ -166,11 +166,16 @@ function createTaskCard(task) {
             event.target.parentNode.remove();
         },
         viewCountdown: function() {
-            this.taskCountdownDiv.style = "display: block";
+            if (this.taskCountdownDiv.style.display === "none") {
+                this.taskCountdownDiv.style.display = "block";
+                
+            } else {
+                this.taskCountdownDiv.style.display = "none";
+            }
         },
-        setIntervalCountdown: function(durationObject) {
-            if (taskCardObj.taskCountdownDiv.firstChild)  taskCardObj.taskCountdownDiv.firstChild.remove()
-            const taskCountdown = displayTaskCountdown(durationObject);
+        setIntervalCountdown: function(task) {
+            if (taskCardObj.taskCountdownDiv.firstChild) taskCardObj.taskCountdownDiv.firstChild.remove()
+            const taskCountdown = displayTaskCountdown(task);
             taskCardObj.taskCountdownDiv.append(taskCountdown);
         }
     }
@@ -232,7 +237,7 @@ function toggleLabel(checked, label) {
 }
 
 function updateTaskFormView([project, task]) {
-    const formSection = createTaskForm('Task', project.id);
+    const formSection = createTaskForm(project.id);
     document.body.append(formSection);
     const form = formSection.lastChild;
     const submitButton = document.getElementById('submitButtonTask');
