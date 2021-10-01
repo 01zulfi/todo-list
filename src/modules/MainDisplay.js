@@ -1,3 +1,4 @@
+import projectCompleteIcon from "../icons/projectCompleteIcon.svg"
 import { DOMFactory } from "./FactoryFunctions.js";
 import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
@@ -72,6 +73,7 @@ function createProjectDOM(project) {
     let addTaskInProjectButton;
     let completeProjectButton;
     let deleteProjectButton;
+    let completeProjectIcon;
     if (project.title === "All Tasks") {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: ""});
         addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
@@ -82,6 +84,8 @@ function createProjectDOM(project) {
                                                              textContent: `Add Task in ${project.title}`});
         completeProjectButton = DOMFactory('button', {className: "completeProjectButton",
                                                         textContent: "Complete"});
+        completeProjectIcon = DOMFactory('img', {src: projectCompleteIcon});
+        completeProjectButton.append(completeProjectIcon);
         deleteProjectButton = DOMFactory('button', {className: "deleteProjectButton", textContent: "Delete Project"});
         completeProjectButton.addEventListener('click', (e) => pubsub.publish('toggleCompleteProject',
         e.target.parentNode.getAttribute("data-id")))

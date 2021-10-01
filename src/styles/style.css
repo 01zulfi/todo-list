@@ -12,6 +12,9 @@ button {
   border: 1px solid black;
   border-radius: 10px;
   color: #FFFFFF;
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 3px;
 }
 
 .main {
