@@ -128,10 +128,13 @@ function createTaskCard(task) {
         taskDiv.style.opacity = 1;
     }
     const taskCardObj = {
+        taskCountdownDiv: DOMFactory('div', {className: "countdownDiv",
+                          style: "display: none"}), //declared here because this in setInterval is weird
         init: function() {
             this.createElements();
             this.appendElements();
             this.bindEvents();
+            window.setInterval(this.setIntervalCountdown, 1000, task);
         },
         createElements: function() {
             this.taskTitle = DOMFactory('h4', {className: 'taskTitle', textContent: task.title});
@@ -143,10 +146,12 @@ function createTaskCard(task) {
             this.taskComplete = DOMFactory('button',  {className: 'taskComplete', textContent: "Completed!"});
             this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task",});
             this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task",});
+            this.taskCountdownButton = DOMFactory('button', {className: 'countdownTaskButton', textContent: "View Countdown"});
         },
         appendElements: function() {
             taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskPriority,
-                             this.taskComplete, this.taskDelete, this.taskUpdate);
+                             this.taskComplete, this.taskDelete, this.taskUpdate, this.taskCountdownButton,
+                             taskCardObj.taskCountdownDiv);
         },
         bindEvents: function() {
             this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask',
@@ -154,15 +159,39 @@ function createTaskCard(task) {
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
             this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireEditData',
                                                                             e.target.parentNode.getAttribute('data-id')));
+            this.taskCountdownButton.addEventListener('click', this.viewCountdown.bind(taskCardObj));
         },
         deleteTaskDOM: function(event) {
             pubsub.publish('deleteTask', event.target.parentNode.getAttribute('data-id'));
             event.target.parentNode.remove();
         },
+        viewCountdown: function() {
+            this.taskCountdownDiv.style = "display: block";
+        },
+        setIntervalCountdown: function(durationObject) {
+            if (taskCardObj.taskCountdownDiv.firstChild)  taskCardObj.taskCountdownDiv.firstChild.remove()
+            const taskCountdown = displayTaskCountdown(durationObject);
+            taskCardObj.taskCountdownDiv.append(taskCountdown);
+        }
     }
     taskCardObj.init();
     return taskDiv
 }
+
+function displayTaskCountdown(task) {
+    const durationObject = task.countdown();
+    if (durationObject === "") return ""
+    const years = DOMFactory('p', {textContent: `Years: ${durationObject.years}`});
+    const months = DOMFactory('p', {textContent: `Months: ${durationObject.months}`});
+    const days = DOMFactory('p', {textContent: `Days: ${durationObject.days}`});
+    const hours = DOMFactory('p', {textContent: `Hours: ${durationObject.hours}`});
+    const minutes = DOMFactory('p', {textContent: `Minutes: ${durationObject.minutes}`});
+    const seconds = DOMFactory('p', {textContent: `Seconds: ${durationObject.seconds}`});
+    const countdownDiv = DOMFactory('div');
+    countdownDiv.append(years, months, days, hours, minutes, seconds);
+    return countdownDiv
+}
+
 
 function createChecklistCheckbox(checklist, task) { 
     const checklistDiv = DOMFactory('div', {className: 'checklistDiv'});

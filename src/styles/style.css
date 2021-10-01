@@ -102,3 +102,8 @@ form {
   padding: 1vw;
   border-radius: 7px;
 }
+
+.countdownDiv {
+  border: 1px solid red;
+  border-radius: 5px;
+}

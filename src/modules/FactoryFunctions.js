@@ -50,7 +50,8 @@ function parseDate(dueDate) {
 }
 
 const TaskItem = function([title, description, dueDate, priority, checklistItems, done]) {
-    const dueDateFormatted = dueDate ? format(parseDate(dueDate), 'yyyy: io MMM, EEEE'): "";
+    const dueDateFormatted = dueDate ? format(parseDate(dueDate), 'yyyy: do MMM, EEEE'): "";
+    const compareDueDate = compareAsc(parseDate(dueDate), new Date());
     const task = {
         title,
         description,
@@ -81,9 +82,18 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
             return dueDate
         },
         get dueDateMessage() {
-            if (compareAsc(parseDate(dueDate), new Date()) === -1) return `${task.dueDate} (Due date already passed)`
+            if (compareDueDate === -1) return `${task.dueDate} (Due date already passed)`
             return task.dueDate
         }, 
+        countdown() {
+            if (!dueDate) return ""
+            if (compareDueDate === -1) return ""
+            const durationObject = intervalToDuration({
+                start: new Date(),
+                end: parseDate(`${dueDate}`),
+            })
+            return durationObject
+        },
         get checklist() {
             return task.checklist
         },
