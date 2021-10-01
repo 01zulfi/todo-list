@@ -1,7 +1,7 @@
-import {TaskItem, TaskManager, ProjectManager} from './FactoryFunctions.js'
+import { TaskItem, TaskManager, ProjectManager } from './FactoryFunctions.js'
 import { pubsub } from './Pubsub.js';
 
-const taskModule = {
+const todoModule = {
     execute: function() {
         getLocalStorage();
         listeners();
@@ -108,7 +108,7 @@ console.log(allProjects);
 function createTask(form) {
     const task = TaskItem([form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
                           form["inputTaskPriority"].value, [document.querySelectorAll('.inputChecklist')]]);
-    const id = form[0].parentNode.getAttribute('data-id');
+    const id = form[0].parentNode.parentNode.getAttribute('data-id');
     const targetProject = allProjects.find(id);
     targetProject.add(task);
     pubsub.publish('addTaskDOM', targetProject);
@@ -174,4 +174,4 @@ function deleteProject(projectId) {
     storeLocal(allProjects.projectArray);
 }
 
-export {taskModule};
+export { todoModule };

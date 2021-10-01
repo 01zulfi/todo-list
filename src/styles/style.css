@@ -93,7 +93,6 @@ button {
 form {
   font-size: 25px;
   height: fit-content;
-  overflow-y: scroll;
   width: 95%;
   border-radius: 5px;
   background-color: #121212;

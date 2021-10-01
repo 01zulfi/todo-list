@@ -182,7 +182,4 @@ const ProjectManager = function() {
     }
 }
 
-export {TaskItem};
-export {TaskManager};
-export {ProjectManager};
-export default DOMFactory;
+export { DOMFactory, TaskItem, TaskManager, ProjectManager };

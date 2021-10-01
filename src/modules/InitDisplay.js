@@ -1,5 +1,11 @@
-import DOMFactory from "./FactoryFunctions.js";
+import { DOMFactory } from "./FactoryFunctions.js";
 import { pubsub } from "./Pubsub.js";
+
+const initDisplayModule = {
+    execute: function() {
+        initDisplayObject.init();
+    },
+}
 
 const initDisplayObject = {
     init: function() {
@@ -135,21 +141,28 @@ function createProjectForm() {
             this.bindEvents();
         },
         createElements: function() {
+            this.closeButton = DOMFactory('span', {className: "closeModal", textContent: 'Close'})
             this.header = DOMFactory('h2', {textContent: "Create a new project"});
             this.form = DOMFactory('form', {id: "projectForm"});
             this.inputProjectTitle = DOMFactory('input', {id: "inputProjectTitle", name: "inputProjectTitle", type: "text",
                                                           placeholder: "project title...", required: "true"});
+            this.labelTitle = DOMFactory('label', {for: "inputProjectTitle", textContent: "Project Title (required):"})
             this.inputProjectDesc = DOMFactory('textarea', {id: "inputProjectDesc", name: "inputProjectDesc",
                                                             placeholder: "desc/notes..."});
+            this.labelDesc = DOMFactory('label', {for: "inputProjectDesc", textContent: "Desc/Notes"})
             this.submitButton = DOMFactory('button', {id: "submitButtonProject", type: "submit", textContent: "Submit"});
         },
         appendElements: function() {        
-            this.form.append(this.inputProjectTitle, this.inputProjectDesc, this.submitButton);
-            formSection.append(this.header, this.form);
+            this.form.append(this.labelTitle, this.inputProjectTitle, this.labelDesc, this.inputProjectDesc, this.submitButton);
+            formSection.append(this.closeButton, this.header, this.form);
         },
         bindEvents: function() {
+            this.closeButton.addEventListener('click', this.closeModal.bind(formObject));
             this.form.addEventListener('submit', this.publishData.bind(formObject));
             this.form.addEventListener('submit', this.formFunction.bind(formObject))
+        },
+        closeModal: function() {
+            formSection.remove()
         },
         publishData: function() {
             pubsub.publish('addProject', this.form.elements);
@@ -164,7 +177,5 @@ function createProjectForm() {
     return formSection;
 }
 
-const pageLoadContent = () => initDisplayObject.init();
-
-export default pageLoadContent;
-export {createTaskForm};
+export { initDisplayModule };
+export { createTaskForm };

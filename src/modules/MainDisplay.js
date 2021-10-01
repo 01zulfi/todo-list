@@ -1,24 +1,23 @@
-import DOMFactory from "./FactoryFunctions.js";
+import { DOMFactory } from "./FactoryFunctions.js";
 import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
 
-function getData() {
-    pubsub.subscribe('addTaskDOM', displayTasks);
-    pubsub.subscribe('editThisData', updateTaskFormView);
-    pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
-    pubsub.subscribe('addProjectDOM', displayProject);
-    pubsub.subscribe('homeSidebarClicked', displayHome);
-    pubsub.subscribe('taskSidebarClicked', displayAllTasks);
-    pubsub.subscribe('projectSidebarClicked', displayAllProjects);
-    pubsub.subscribe('addProjectSidebar', addProjectSidebar);
-    pubsub.subscribe('toggleCompleteProjectDOM', completeProjectDOM);
+const mainDisplayModule = {
+    execute: function() {
+        pubsub.subscribe('addTaskDOM', displayTasks);
+        pubsub.subscribe('editThisData', updateTaskFormView);
+        pubsub.subscribe('toggleCompleteTaskDOM', completeTaskDOM);
+        pubsub.subscribe('addProjectDOM', displayProject);
+        pubsub.subscribe('homeSidebarClicked', displayHome);
+        pubsub.subscribe('taskSidebarClicked', displayAllTasks);
+        pubsub.subscribe('projectSidebarClicked', displayAllProjects);
+        pubsub.subscribe('addProjectSidebar', addProjectSidebar);
+        pubsub.subscribe('toggleCompleteProjectDOM', completeProjectDOM);
+    }
 }
 
-
-function log(data) {
-    console.log(data);
-}
 pubsub.subscribe('pageLoad', displayHome);
+
 function displayHome(projects) {
     clearSections();
     for (const project of projects) {
@@ -277,4 +276,4 @@ function completeProjectDOM(project) {
     }
 }
 
-export default getData;
+export { mainDisplayModule };
