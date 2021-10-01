@@ -5,7 +5,6 @@ import pageLoadContent from "./modules/InitDisplay.js";
 import { taskModule } from './modules/Todo.js';
 import getData from './modules/MainDisplay.js';
 
-
 pageLoadContent();
 taskModule.execute();
 getData();

@@ -86,8 +86,9 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
             return task.dueDate
         }, 
         countdown() {
-            if (!dueDate) return ""
-            if (compareDueDate === -1) return ""
+            if (!dueDate || compareDueDate === -1) {
+                return {years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0}
+            }
             const durationObject = intervalToDuration({
                 start: new Date(),
                 end: parseDate(`${dueDate}`),

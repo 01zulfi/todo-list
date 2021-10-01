@@ -48,6 +48,7 @@ function displayAllProjects(projects) {
 
 function addProjectSidebar(projectTitle) {
     const menuAndTitleDiv = document.querySelector('.menuAndTitleDiv');
+    if (document.getElementById(projectTitle)) return
     const projectTitleDiv = DOMFactory('div', {id: projectTitle, textContent: projectTitle});
     menuAndTitleDiv.append(projectTitleDiv);
     projectTitleDiv.addEventListener('click', () => document.querySelector(".headerText").textContent = projectTitle)
@@ -185,7 +186,6 @@ function createTaskCard(task) {
 
 function displayTaskCountdown(task) {
     const durationObject = task.countdown();
-    if (durationObject === "") return ""
     const years = DOMFactory('p', {textContent: `Years: ${durationObject.years}`});
     const months = DOMFactory('p', {textContent: `Months: ${durationObject.months}`});
     const days = DOMFactory('p', {textContent: `Days: ${durationObject.days}`});
