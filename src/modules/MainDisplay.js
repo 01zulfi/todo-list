@@ -51,7 +51,7 @@ function addProjectSidebar(projectTitle) {
     if (document.getElementById(projectTitle)) return
     const projectTitleDiv = DOMFactory('div', {id: projectTitle, textContent: projectTitle});
     newProjectSidebar.append(projectTitleDiv);
-    projectTitleDiv.addEventListener('click', () => document.querySelector(".headerText").textContent = "Project")
+    projectTitleDiv.addEventListener('click', () => document.querySelector(".headerText").textContent = "Projects")
     projectTitleDiv.addEventListener('click', (e) => pubsub.publish('requireProjectForDisplay', e.target.id));
 }
 
@@ -246,21 +246,23 @@ function updateTaskFormView([project, task]) {
     const formSection = createTaskForm(project.id);
     document.body.append(formSection);
     const form = formSection.lastChild;
-    const submitButton = document.getElementById('submitButtonTask');
-    form.elements[0].value = task.title;
-    form.elements[1].value = task.description;
-    form.elements[2].value = task.dueDateInput;
-    form.elements[3].value = task.priority;
+    const checklistDiv = formSection.querySelector('.inputTaskChecklistDiv');
+    const closeModal = formSection.querySelector('.closeModal');
+    form.elements["inputTaskName"].value = task.title;
+    form.elements["inputTaskDesc"].value = task.description;
+    form.elements["inputTaskDueDate"].value = task.dueDateInput;
+    form.elements["inputTaskPriority"].value = task.priority;
     for (const item of task.checklist) {
-        const inputTaskChecklistDiv = DOMFactory('div');
+        const inputTaskChecklistItemDiv = DOMFactory('div');
         const inputTaskChecklist = DOMFactory('input', {className: `inputChecklist`, type: "text",
                                                         value: item.content, disabled: item.checked});
         const inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'Del Item'});
-        inputTaskChecklistDiv.append(inputTaskChecklist, inputTaskChecklistDelete);
-        form.insertBefore(inputTaskChecklistDiv, submitButton);
+        inputTaskChecklistItemDiv.append(inputTaskChecklist, inputTaskChecklistDelete);
+        checklistDiv.append(inputTaskChecklistItemDiv);
         inputTaskChecklistDelete.addEventListener('click', deleteChecklistItem);
     }
     function deleteChecklistItem(event) {event.target.parentNode.remove()};
+    closeModal.addEventListener('click', () => pubsub.publish('addTask', [form, task]));
 }
 
 function completeTaskDOM(task) {

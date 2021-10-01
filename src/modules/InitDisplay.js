@@ -19,10 +19,10 @@ const initDisplayObject = {
         this.title = DOMFactory('h2', {className: "appTitle", textContent:"T O D O"});
         //this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
         this.sidebarMain = DOMFactory('div', {className: "sidebarMain"});
-        this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "homeSidebar", textContent: 'Home'});
+        this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv selected', id: "homeSidebar", textContent: 'Home'});
         this.taskSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "taskSidebar",textContent: 'Tasks'});
         this.projectSidebar = DOMFactory('div', {className: "sidebarDiv", id: "projectSidebar", textContent: "Projects"});
-        this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
+        this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: " + | Add Project"});
         this.newProjectSidebar = DOMFactory('div', {className: 'newProjectSidebar'})
         this.main = DOMFactory('div', {className: "main"});
         this.header = DOMFactory('div', {className: "header"});
@@ -39,11 +39,30 @@ const initDisplayObject = {
     bindEvents: function() {
         this.homeSidebar.addEventListener('click', this.changeHeader.bind(initDisplayObject));
         this.taskSidebar.addEventListener('click', this.changeHeader.bind(initDisplayObject));
+        this.sidebarMain.addEventListener('click', this.toggleSelected.bind(initDisplayObject));
+        this.newProjectSidebar.addEventListener('click', this.toggleSelected.bind(initDisplayObject));
         this.projectSidebar.addEventListener('click', this.changeHeader.bind(initDisplayObject));
         this.addProjectButton.addEventListener('click', this.openProjectForm);
     },
     changeHeader: function(event) {
         this.headerText.textContent = event.target.textContent;
+    },
+    toggleSelected: function(event) {
+        if (event.target.id === "homeSidebar") {
+            this.homeSidebar.classList.add('selected');
+            this.taskSidebar.classList.remove('selected');
+            this.projectSidebar.classList.remove('selected');
+        }
+        if (event.target.id === 'taskSidebar') {
+            this.homeSidebar.classList.remove('selected');
+            this.taskSidebar.classList.add('selected');
+            this.projectSidebar.classList.remove('selected');
+        }
+        if (event.target.id === 'projectSidebar' || event.target.parentNode.classList.contains('newProjectSidebar')) {
+            this.homeSidebar.classList.remove('selected');
+            this.taskSidebar.classList.remove('selected');
+            this.projectSidebar.classList.add('selected');
+        }
     },
     openProjectForm: function() {
         if (!createProjectForm()) return
@@ -64,7 +83,7 @@ function createTaskForm(projectId) {
         createElements: function() {
             this.closeButton = DOMFactory('span', {className: "closeModal", textContent: 'Close'})
             this.header = DOMFactory('h2', {textContent: "Create a new task"});
-            this.form = DOMFactory('form', {id: `form$Task`, "data-id": projectId});
+            this.form = DOMFactory('form', {id: `formTask`, "data-id": projectId});
             this.formContainerOne = DOMFactory('div', {className: 'formContainerOne'});
             this.formContainerTwo = DOMFactory('div', {className: 'formContainerTwo'});
             this.inputTaskTitle = DOMFactory('input', {id: `inputTaskTitle`, name: `inputTaskName`,
@@ -104,7 +123,7 @@ function createTaskForm(projectId) {
             formSection.remove();
         },
         publishData: function() {
-            pubsub.publish('addTask', this.form.elements);
+            pubsub.publish('addTask', [this.form.elements]);
         },
         formFunction: function(event) {
             event.preventDefault();

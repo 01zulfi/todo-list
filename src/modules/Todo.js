@@ -105,12 +105,17 @@ allProjects.add(TaskManager(['All Tasks']));
 
 console.log(allProjects);
 
-function createTask(form) {
-    const task = TaskItem([form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
-                          form["inputTaskPriority"].value, [document.querySelectorAll('.inputChecklist')]]);
+function createTask([form, task]) {
+    let newTask;
+    if (task) {
+        newTask = task;
+    } else {
+        newTask = TaskItem([form["inputTaskName"].value, form["inputTaskDesc"].value, form["inputTaskDueDate"].value, 
+        form["inputTaskPriority"].value, [document.querySelectorAll('.inputChecklist')]]);
+    }
     const id = form[0].parentNode.parentNode.getAttribute('data-id');
     const targetProject = allProjects.find(id);
-    targetProject.add(task);
+    targetProject.add(newTask);
     pubsub.publish('addTaskDOM', targetProject);
     storeLocal(allProjects.projectArray);
 }
