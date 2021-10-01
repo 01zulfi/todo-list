@@ -64,7 +64,7 @@ function storeLocal(data) {
         localStorage.setItem(`Project: ${i};`, JSON.stringify([project.title, project.description, project.done]));
         let j = 1; 
         for (const task of project.taskArray) {
-            localStorage.setItem(`Project: ${i}; Task: ${j}`, JSON.stringify([task.title, task.description, task.dueDate,
+            localStorage.setItem(`Project: ${i}; Task: ${j}`, JSON.stringify([task.title, task.description, task.dueDateInput,
                                                                  task.priority, 
                                                                 extractContentFromChecklist(task.checklist), task.done]));                     
             j++;

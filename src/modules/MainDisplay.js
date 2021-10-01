@@ -137,7 +137,7 @@ function createTaskCard(task) {
             this.taskTitle = DOMFactory('h4', {className: 'taskTitle', textContent: task.title});
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskChecklist = createChecklistCheckbox(task.checklist, task);
-            this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDate});
+            this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDateMessage});
             this.taskPriority = DOMFactory('p', {className: 'taskPriority', textContent: task.priority ?
                                                         `Priority: ${task.priority}`: ""});
             this.taskComplete = DOMFactory('button',  {className: 'taskComplete', textContent: "Completed!"});
@@ -209,7 +209,7 @@ function updateTaskFormView([project, task]) {
     const submitButton = document.getElementById('submitButtonTask');
     form.elements[0].value = task.title;
     form.elements[1].value = task.description;
-    form.elements[2].value = task.dueDate;
+    form.elements[2].value = task.dueDateInput;
     form.elements[3].value = task.priority;
     for (const item of task.checklist) {
         const inputTaskChecklistDiv = DOMFactory('div');

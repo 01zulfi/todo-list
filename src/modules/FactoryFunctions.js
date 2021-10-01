@@ -1,4 +1,4 @@
-import { intervalToDuration, parseJSON } from "date-fns";
+import { compareAsc, format, intervalToDuration } from "date-fns";
 
 const DOMFactory = function(element, attributes) {  //for simple elements
     const newElement = document.createElement(element);
@@ -44,16 +44,17 @@ const checklist = function([items, checked]) {
 }
 
 function parseDate(dueDate) {
+    if (!dueDate) return
     const parsed = dueDate.split(/\D/);
     return new Date(parsed[0], --parsed[1], parsed[2]);
 }
 
 const TaskItem = function([title, description, dueDate, priority, checklistItems, done]) {
-    
+    const dueDateFormatted = dueDate ? format(parseDate(dueDate), 'yyyy: io MMM, EEEE'): "";
     const task = {
         title,
         description,
-        dueDate,
+        dueDate: dueDateFormatted,
         priority: priority || "",
         checklist: checklist(checklistItems),
         id: uniqueId(),
@@ -76,6 +77,13 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
         get dueDate() {
             return task.dueDate
         },
+        get dueDateInput() {
+            return dueDate
+        },
+        get dueDateMessage() {
+            if (compareAsc(parseDate(dueDate), new Date()) === -1) return `${task.dueDate} (Due date already passed)`
+            return task.dueDate
+        }, 
         get checklist() {
             return task.checklist
         },
