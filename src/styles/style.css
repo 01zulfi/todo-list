@@ -6,6 +6,21 @@
   background-color: #6200EE;
 }
 
+@font-face {
+  font-family: 'Cinzel-Black';
+  src: url('../fonts/Cinzel-Black.ttf');
+}
+
+@font-face {
+  font-family: 'Merriweather-Sans';
+  src: url(../fonts/MerriweatherSans-ExtraBoldItalic.ttf);
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url(../fonts/Kalam-Regular.ttf);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -224,6 +239,7 @@ input, textarea {
 
 .headerText {
   text-align: center;
+  font-family: 'Cinzel-Black', sans-serif;
 }
 
 .taskDiv {
@@ -238,6 +254,7 @@ input, textarea {
 }
 
 .taskDiv h3 {
+  font-family: "Kalam", sans-serif;
   font-size: 25px;
   text-align: center;
 }
@@ -334,6 +351,7 @@ input, textarea {
 }
 
 .projectSection h2 {
+  font-family: 'Merriweather-Sans', sans-serif;
   text-align: center;
   font-size: 30px;
 }
@@ -463,6 +481,11 @@ input, textarea {
 
 form #submitButtonTask:hover, form #submitButtonProject:hover {
   background-color: #3D00E0;
+}
+
+input:disabled {
+  opacity: 0.5;
+  border: 1px solid red;
 }
 
 @media only screen and (min-width: 768px) {

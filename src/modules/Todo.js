@@ -56,7 +56,6 @@ function extractContentFromChecklist(data) {
     return [checklistContent, checklistChecked]
 }
 
-
 function storeLocal(data) {    
     localStorage.clear();
     let i = 1;
@@ -103,8 +102,6 @@ function listeners() {
 const allProjects = ProjectManager();
 allProjects.add(TaskManager(['All Tasks']));
 
-console.log(allProjects);
-
 function createTask([form, task]) {
     let newTask;
     if (task) {
@@ -142,7 +139,6 @@ function sendRequiredData(taskId) {
 function toggleChecklistChecked([itemId, taskId]) {
     const task = allProjects.getTaskWithTaskId(taskId);
     const targetChecklistObj = task.findChecklistItem(itemId);
-    console.log(task);
     if (targetChecklistObj.checked) {
         targetChecklistObj.checked = false;
     } else {

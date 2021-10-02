@@ -66,7 +66,6 @@ function deleteProjectSidebar(projectTitle) {
     document.getElementById(projectTitle).remove();
 }
 
-
 function createProjectDOM(project) {
     const main = document.querySelector('.main');
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
@@ -151,11 +150,6 @@ function deleteAllTasks(projectSection) {
 
 function createTaskCard(task) {
     const taskDiv = DOMFactory('div', {className: 'taskDiv', "data-id": task.id});
-    // if (task.done) {
-    //     taskDiv.style.opacity = 0.5;
-    // } else {
-    //     taskDiv.style.opacity = 1;
-    // }
     const taskCardObj = {
         taskCountdownDiv: DOMFactory('div', {className: "countdownDiv",
                           style: "display: none"}), //declared here because "this" in setInterval is weird
@@ -252,7 +246,6 @@ function displayTaskCountdown(task) {
     countdownDiv.append(yearsDiv, monthsDiv, daysDiv, hoursDiv, minutesDiv, secondsDiv);
     return countdownDiv
 }
-
 
 function createChecklistCheckbox(checklist, task) { 
     const checklistDiv = DOMFactory('div', {className: 'checklistDiv'});

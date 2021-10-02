@@ -75,7 +75,6 @@ const initDisplayObject = {
     },
 };
 
-
 function createTaskForm(projectId) {
     if (document.querySelector('.formModal')) return
     const formSection = DOMFactory('section', {id: `sectionTaskForm`, className: "formModal"});

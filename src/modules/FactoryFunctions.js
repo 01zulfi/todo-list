@@ -1,6 +1,6 @@
 import { compareAsc, format, intervalToDuration } from "date-fns";
 
-const DOMFactory = function(element, attributes) {  //for simple elements
+const DOMFactory = function(element, attributes) {
     const newElement = document.createElement(element);
     for (const attribute in attributes) {
         if (attribute === 'list') {
@@ -11,8 +11,7 @@ const DOMFactory = function(element, attributes) {  //for simple elements
             newElement.setAttribute(attribute.toString(), attributes[attribute]);
         } else {
             newElement[attribute] = attributes[attribute];
-        }
-        
+        }   
     }
     return newElement
 }
@@ -68,7 +67,6 @@ const TaskItem = function([title, description, dueDate, priority, checklistItems
             return false
         })(),
     }
-
     return {
         get title() {
             return task.title
@@ -139,7 +137,19 @@ const TaskManager = function([title, description, done]) {
             return tasks.find(task => task.id === id)
         },
         get taskArray() {
-            return [...tasks]
+            const duplicateArray = [...tasks];
+            duplicateArray.sort((a, b) => {
+                if (a.priority === "High" && b.priority === "High") return 0
+                if (a.priority === "High" && b.priority === "Medium") return -1
+                if (a.priority === "High" && b.priority === "Low") return -1
+                if (a.priority === "Medium" && b.priority === "High") return 1
+                if (a.priority === "Medium" && b.priority === "Medium") return 0
+                if (a.priority === "Medium" && b.priority === "Low") return -1
+                if (a.priority === "Low" && b.priority === "High") return 1
+                if (a.priority === "Low" && b.priority === "Medium") return 1
+                if (a.priority === "Low" && b.priority === "Low") return 0
+            })
+            return [...duplicateArray]
         },
         get title() {
             return project.title
