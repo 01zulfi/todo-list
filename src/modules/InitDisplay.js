@@ -98,8 +98,12 @@ function createTaskForm(projectId) {
             this.inputTaskDueDate = DOMFactory('input', {id: `inputTaskDueDate`, name: `inputTaskDueDate`,
                                                          type: "date"});
             this.labelDueDate = DOMFactory('label', {for: "inputTaskDueDate", textContent: "Due Date:"});
-            this.inputTaskPriority = DOMFactory('input', {id: `inputTaskPriority`, name: `inputTaskPriority`, type: "text", 
-                                                          placeholder: "high/medium/low"});
+            this.inputTaskPriority = DOMFactory('input', {id: `inputTaskPriority`, name: `inputTaskPriority`,
+                                                         'list': "priorities", placeholder: 'High/Medium/Low'});
+            this.datalistPriorities = DOMFactory('datalist', {id: "priorities"});
+            this.highOption = DOMFactory('option', {value: "High"});
+            this.mediumOption = DOMFactory('option', {value: "Medium"});
+            this.lowOption = DOMFactory('option', {value: "Low"});
             this.labelPriority = DOMFactory('label', {for: "inputTaskPriority", textContent: "Priority: "});
             this.addTaskChecklistButton = DOMFactory('button', {id: `addTaskChecklistButton`, type: "button", 
                                                                 textContent: "Add Checklist"});
@@ -107,9 +111,10 @@ function createTaskForm(projectId) {
             this.submitButton = DOMFactory('button', {id: "submitButtonTask", type: "submit", textContent: "Submit"});
         },
         appendElements: function() {
+            this.datalistPriorities.append(this.highOption, this.mediumOption, this.lowOption);
             this.inputTaskChecklistDiv.append(this.addTaskChecklistButton);
             this.formContainerOne.append(this.labelTitle, this.inputTaskTitle, this.labelDueDate, this.inputTaskDueDate,
-                                         this.labelPriority, this.inputTaskPriority);
+                                         this.labelPriority, this.inputTaskPriority, this.datalistPriorities);
             this.formContainerTwo.append(this.labelDesc, this.inputTaskDesc, this.inputTaskChecklistDiv, this.submitButton);
             this.form.append(this.formContainerOne, this.formContainerTwo);
             formSection.append(this.closeButton, this.header, this.form);

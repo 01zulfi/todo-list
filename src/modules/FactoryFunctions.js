@@ -3,6 +3,10 @@ import { compareAsc, format, intervalToDuration } from "date-fns";
 const DOMFactory = function(element, attributes) {  //for simple elements
     const newElement = document.createElement(element);
     for (const attribute in attributes) {
+        if (attribute === 'list') {
+            newElement.setAttribute(attribute, attributes[attribute]);
+            continue
+        }
         if (attribute.toString().includes('data')) {
             newElement.setAttribute(attribute.toString(), attributes[attribute]);
         } else {
@@ -50,7 +54,7 @@ function parseDate(dueDate) {
 }
 
 const TaskItem = function([title, description, dueDate, priority, checklistItems, done]) {
-    const dueDateFormatted = dueDate ? format(parseDate(dueDate), 'yyyy: do MMM, EEEE'): "";
+    const dueDateFormatted = dueDate ? format(parseDate(dueDate), 'yyyy: do MMM, E'): "";
     const compareDueDate = compareAsc(parseDate(dueDate), new Date());
     const task = {
         title,

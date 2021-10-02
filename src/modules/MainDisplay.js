@@ -1,6 +1,10 @@
 import taskAddIcon from "../icons/taskAddIcon.svg";
 import projectCompleteIcon from "../icons/projectCompleteIcon.svg";
 import projectDeleteIcon from "../icons/projectDeleteIcon.svg";
+import taskCompleteIcon from "../icons/taskCompleteIcon.svg";
+import taskDeleteIcon from "../icons/taskDeleteIcon.svg";
+import taskEditIcon from "../icons/taskEditIcon.svg";
+import taskViewCountdownIcon from "../icons/taskViewCountdownIcon.svg";
 import { DOMFactory } from "./FactoryFunctions.js";
 import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
@@ -67,11 +71,7 @@ function createProjectDOM(project) {
     const main = document.querySelector('.main');
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
     const projectButtonContainer = DOMFactory('div', {className: "projectButtonContainer"});
-    // if (project.done) {
-    //     projectSection.style.opacity = 0.5;
-    // } else {
-    //     projectSection.style.opacity = 1;
-    // }
+    const taskContainer = DOMFactory('div', {className: "taskContainer"});
     let projectHeading;
     let addTaskInProjectButton;
     let completeProjectButton;
@@ -97,21 +97,21 @@ function createProjectDOM(project) {
         deleteProjectButton.append(deleteProjectIcon);
         addTaskInProjectButton.append(addTaskInProjectIcon);
         completeProjectButton.addEventListener('click', (event) => {
-            pubsub.publish('toggleCompleteProject', event.target.parentNode.parentNode.getAttribute("data-id"));
+            pubsub.publish('toggleCompleteProject', event.currentTarget.parentNode.parentNode.getAttribute("data-id"));
         })
         deleteProjectButton.addEventListener('click', (e) => {
-            pubsub.publish('deleteProject', e.target.parentNode.parentNode.getAttribute('data-id'));
+            pubsub.publish('deleteProject', e.currentTarget.parentNode.parentNode.getAttribute('data-id'));
             e.target.parentNode.parentNode.remove();
         })
     }
     projectButtonContainer.append(addTaskInProjectButton, completeProjectButton || "", deleteProjectButton || "")
-    projectSection.append(projectHeading, projectButtonContainer);
+    projectSection.append(projectHeading, projectButtonContainer, taskContainer);
     main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
         if (!createTaskForm()) return
-        const formSection = createTaskForm(this.parentNode.getAttribute('data-id'));
-        this.parentNode.append(formSection);
+        const formSection = createTaskForm(projectSection.getAttribute('data-id'));
+        projectSection.append(formSection);
     }
     if (project.taskArray.length !== 0) {
         displayTasks(project)
@@ -129,13 +129,14 @@ function clearSections() {
 
 function displayTasks(project) {
     const projectSection = document.querySelector(`[data-id="${project.id}"]`);
-    const taskContainer = DOMFactory('div', {className: "taskContainer"});
+    const taskContainer = projectSection.querySelector('.taskContainer');
     deleteAllTasks(projectSection);
     const tasks = project.taskArray;
+    projectSection.append(taskContainer);
     for (const task of tasks) {
         taskContainer.append(createTaskCard(task));
+        completeTaskDOM(task);
     }
-    projectSection.append(taskContainer);
     completeProjectDOM(project);
 }
 
@@ -148,14 +149,14 @@ function deleteAllTasks(projectSection) {
 
 function createTaskCard(task) {
     const taskDiv = DOMFactory('div', {className: 'taskDiv', "data-id": task.id});
-    if (task.done) {
-        taskDiv.style.opacity = 0.5;
-    } else {
-        taskDiv.style.opacity = 1;
-    }
+    // if (task.done) {
+    //     taskDiv.style.opacity = 0.5;
+    // } else {
+    //     taskDiv.style.opacity = 1;
+    // }
     const taskCardObj = {
         taskCountdownDiv: DOMFactory('div', {className: "countdownDiv",
-                          style: "display: none"}), //declared here because this in setInterval is weird
+                          style: "display: none"}), //declared here because "this" in setInterval is weird
         init: function() {
             this.createElements();
             this.appendElements();
@@ -163,35 +164,45 @@ function createTaskCard(task) {
             window.setInterval(this.setIntervalCountdown, 1000, task);
         },
         createElements: function() {
-            this.taskTitle = DOMFactory('h4', {className: 'taskTitle', textContent: task.title});
+            this.taskTitle = DOMFactory('h3', {className: 'taskTitle', textContent: task.title});
             this.taskDesc = DOMFactory('p', {className: 'taskDesc', textContent: task.description});
             this.taskChecklist = createChecklistCheckbox(task.checklist, task);
             this.taskDueDate = DOMFactory('p', {className: 'taskDueDate', textContent: task.dueDateMessage});
-            this.taskPriority = DOMFactory('p', {className: 'taskPriority', textContent: task.priority ?
+            this.taskPriority = DOMFactory('p', {className: `taskPriority ${task.priority}`, textContent: task.priority ?
                                                         `Priority: ${task.priority}`: ""});
-            this.taskComplete = DOMFactory('button',  {className: 'taskComplete', textContent: "Completed!"});
-            this.taskDelete = DOMFactory('button', {className: 'deleteTask', textContent: "Delete Task",});
-            this.taskUpdate = DOMFactory('button', {className: 'updateTask', textContent: "Update Task",});
-            this.taskCountdownButton = DOMFactory('button', {className: 'countdownTaskButton', textContent: "View Countdown"});
+            this.taskButtonContainer = DOMFactory('div', {className: 'taskButtonContainer'});
+            this.taskComplete = DOMFactory('button',  {className: 'taskComplete'});
+            this.taskCompleteIcon = DOMFactory('img', {src: taskCompleteIcon});
+            this.taskDelete = DOMFactory('button', {className: 'deleteTask'});
+            this.taskDeleteIcon = DOMFactory('img', {src: taskDeleteIcon});
+            this.taskUpdate = DOMFactory('button', {className: 'updateTask'});
+            this.taskUpdateIcon = DOMFactory('img', {src: taskEditIcon});
+            this.taskCountdownButton = DOMFactory('button', {className: 'countdownTaskButton'});
+            this.taskCountdownIcon = DOMFactory('img', {src: taskViewCountdownIcon});
         },
         appendElements: function() {
+            this.taskComplete.append(this.taskCompleteIcon);
+            this.taskDelete.append(this.taskDeleteIcon);
+            this.taskUpdate.append(this.taskUpdateIcon);
+            this.taskCountdownButton.append(this.taskCountdownIcon);
+            this.taskButtonContainer.append(this.taskComplete, this.taskDelete, this.taskUpdate, this.taskCountdownButton)
             taskDiv.append(this.taskTitle, this.taskDesc, this.taskChecklist, this.taskDueDate, this.taskPriority,
-                             this.taskComplete, this.taskDelete, this.taskUpdate, this.taskCountdownButton,
-                             taskCardObj.taskCountdownDiv);
+                             this.taskButtonContainer, taskCardObj.taskCountdownDiv);
         },
         bindEvents: function() {
-            this.taskComplete.addEventListener('click', (e) => pubsub.publish('toggleCompleteTask',
-                                                                               e.target.parentNode.getAttribute('data-id')));
+            this.taskComplete.addEventListener('click', (event) => pubsub.publish('toggleCompleteTask',
+                                                event.currentTarget.parentNode.parentNode.getAttribute('data-id')));
             this.taskDelete.addEventListener('click', this.deleteTaskDOM);
-            this.taskUpdate.addEventListener('click',(e) => pubsub.publish('requireEditData',
-                                                                            e.target.parentNode.getAttribute('data-id')));
+            this.taskUpdate.addEventListener('click',(event) => pubsub.publish('requireEditData',
+                                                event.currentTarget.parentNode.parentNode.getAttribute('data-id')));
             this.taskCountdownButton.addEventListener('click', this.viewCountdown.bind(taskCardObj));
         },
         deleteTaskDOM: function(event) {
-            pubsub.publish('deleteTask', event.target.parentNode.getAttribute('data-id'));
-            event.target.parentNode.remove();
+            pubsub.publish('deleteTask', event.currentTarget.parentNode.parentNode.getAttribute('data-id'));
+            event.currentTarget.parentNode.parentNode.remove();
         },
         viewCountdown: function() {
+            this.taskCountdownButton.classList.toggle('clicked');
             if (this.taskCountdownDiv.style.display === "none") {
                 this.taskCountdownDiv.style.display = "block";
                 
@@ -211,20 +222,44 @@ function createTaskCard(task) {
 
 function displayTaskCountdown(task) {
     const durationObject = task.countdown();
-    const years = DOMFactory('p', {textContent: `Years: ${durationObject.years}`});
-    const months = DOMFactory('p', {textContent: `Months: ${durationObject.months}`});
-    const days = DOMFactory('p', {textContent: `Days: ${durationObject.days}`});
-    const hours = DOMFactory('p', {textContent: `Hours: ${durationObject.hours}`});
-    const minutes = DOMFactory('p', {textContent: `Minutes: ${durationObject.minutes}`});
-    const seconds = DOMFactory('p', {textContent: `Seconds: ${durationObject.seconds}`});
+    const yearsDiv = DOMFactory('div', {className: "durationContainer"});
+    const yearsText = DOMFactory('p', {textContent: `Years`});
+    const yearsNumber = DOMFactory('p', {textContent: durationObject.years});
+    const monthsDiv = DOMFactory('div', {className: "durationContainer"});
+    const monthsText = DOMFactory('p', {textContent: `Months`});
+    const monthsNumber = DOMFactory('p', {textContent: durationObject.months});
+    const daysDiv = DOMFactory('div', {className: "durationContainer"});
+    const daysText = DOMFactory('p', {textContent: `Days`});
+    const daysNumber = DOMFactory('p', {textContent: durationObject.days});
+    const hoursDiv = DOMFactory('div', {className: "durationContainer"});
+    const hoursText = DOMFactory('p', {textContent: `Hours`});
+    const hoursNumber = DOMFactory('p', {textContent: durationObject.hours});
+    const minutesDiv = DOMFactory('div', {className: "durationContainer"});
+    const minutesText = DOMFactory('p', {textContent: `Minutes`});
+    const minutesNumber = DOMFactory('p', {textContent: durationObject.minutes});
+    const secondsDiv = DOMFactory('div', {className: "durationContainer"});
+    const secondsText = DOMFactory('p', {textContent: `Seconds`});
+    const secondsNumber = DOMFactory('p', {textContent: durationObject.seconds});
+    yearsDiv.append(yearsText, yearsNumber);
+    monthsDiv.append(monthsText, monthsNumber);
+    daysDiv.append(daysText, daysNumber);
+    hoursDiv.append(hoursText, hoursNumber);
+    minutesDiv.append(minutesText, minutesNumber);
+    secondsDiv.append(secondsText, secondsNumber);
     const countdownDiv = DOMFactory('div');
-    countdownDiv.append(years, months, days, hours, minutes, seconds);
+    countdownDiv.append(yearsDiv, monthsDiv, daysDiv, hoursDiv, minutesDiv, secondsDiv);
     return countdownDiv
 }
 
 
 function createChecklistCheckbox(checklist, task) { 
     const checklistDiv = DOMFactory('div', {className: 'checklistDiv'});
+    const checklistHeading = DOMFactory('p', {className: 'checklistDivHeading', textContent: "Checklist:"});
+    if (checklist.length === 0) {
+        checklistHeading.textContent = "";
+        return checklistDiv;
+    }
+    checklistDiv.append(checklistHeading);
     for(const item of checklist) {
         const checkboxDiv = DOMFactory('div', {className: 'checkboxDiv', "data-id": task.id});  
         const checkbox = DOMFactory('input', {type: "checkbox", id: item.id, "data-id": item.id, "pointer-events": "none"});
@@ -275,7 +310,7 @@ function updateTaskFormView([project, task]) {
         const inputTaskChecklistItemDiv = DOMFactory('div');
         const inputTaskChecklist = DOMFactory('input', {className: `inputChecklist`, type: "text",
                                                         value: item.content, disabled: item.checked});
-        const inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'Del Item'});
+        const inputTaskChecklistDelete = DOMFactory('button', {className: `inputTaskChecklistDelete`, textContent: 'X'});
         inputTaskChecklistItemDiv.append(inputTaskChecklist, inputTaskChecklistDelete);
         checklistDiv.append(inputTaskChecklistItemDiv);
         inputTaskChecklistDelete.addEventListener('click', deleteChecklistItem);
@@ -286,10 +321,22 @@ function updateTaskFormView([project, task]) {
 
 function completeTaskDOM(task) {
     const taskDiv = document.querySelector(`[data-id="${task.id}"]`);
+    const completeTask = document.querySelector('.taskComplete');
+    const updateTask = taskDiv.querySelector('.updateTask');
+    const countdownTask = taskDiv.querySelector('.countdownTaskButton');
+    const checklistDiv = taskDiv.querySelector('.checklistDiv');
     if (task.done) {
-        taskDiv.style.opacity = 0.5;
+        taskDiv.classList.add('complete');
+        completeTask.classList.add('complete');
+        updateTask.classList.add('complete');
+        countdownTask.classList.add('complete');
+        checklistDiv.classList.add('complete');
     } else {
-        taskDiv.style.opacity = 1;
+        updateTask.classList.remove('complete');
+        completeTask.classList.remove('complete');
+        countdownTask.classList.remove('complete');
+        checklistDiv.classList.remove('complete');
+        taskDiv.classList.remove('complete');
     }
 }
 

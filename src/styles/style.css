@@ -209,10 +209,74 @@ input, textarea {
 }
 
 .taskDiv {
-  border: 2px solid gray;
+  border: 1px solid gray;
+  padding: 5px;
   border-radius: 10px;
   background-color: rgba(255,255,255,0.07);
   margin: 1vh;
+  width: 95%;
+}
+
+.taskDiv h3 {
+  font-size: 25px;
+  text-align: center;
+}
+
+.taskDiv div, .taskDiv p{
+  font-size: 20px;
+  text-align: center;
+}
+
+.taskDiv .checklistDiv {
+  background-color: rgba(255,255,255,0.08);
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.taskDiv .taskDueDate {
+  background-color: rgba(255,255,255,0.08);
+  padding: 2px;
+  border-radius: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.taskDiv .taskPriority {
+  background-color: rgba(255,255,255,0.08);
+  padding: 2px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.taskDiv .taskPriority.High {
+  border: 1px solid red;
+}
+
+.taskDiv .taskPriority.Medium {
+  border: 1px solid yellow;
+}
+
+.taskDiv .taskPriority.Low {
+  border: 1px solid white;
+}
+
+.taskDiv .checklistDiv .checkboxDiv {
+  background-color: rgba(255,255,255,0.09);
+  margin: 3px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px
+}
+
+.taskDiv .checklistDiv p {
+  color:#F5F5F5;
+}
+
+.taskButtonContainer {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .projectSection {
@@ -222,6 +286,7 @@ input, textarea {
   border-radius: 7px;
   display: flex;
   flex-direction: column;
+  width: 95%;
 }
 
 .projectSection h2 {
@@ -230,7 +295,7 @@ input, textarea {
 }
 
 .projectSection.complete {
-  border: 1px solid #A5D6A7;
+  border: 2px solid #A5D6A7;
   opacity: 0.9;
 }
 
@@ -243,8 +308,28 @@ input, textarea {
 }
 
 .countdownDiv {
-  border: 1px solid red;
+  padding: 4px;
+  background-color: rgba(255,255,255,0.09);
   border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.countdownDiv div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.countdownDiv div .durationContainer {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  width: 25%; 
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgba(255,255,255,0.11);
 }
 
 .taskContainer {
@@ -257,13 +342,14 @@ input, textarea {
   pointer-events: none;
 }
 
-.taskContainer.complete div {
-  background-color: rgb(146, 197, 148, 0.07);
+.taskDiv button {
+  background-color: #00796B;
+  padding: 4px;
+  width: 20%;
 }
 
-.taskDiv button {
-  background-color: #A5D6A7;
-  color: black;
+.taskDiv button img {
+  margin: 0 auto;
 }
 
 .addTaskInProject.complete {
@@ -274,4 +360,31 @@ input, textarea {
 .completeProjectButton.complete {
   background-color:#00C853;
   color: black;
+}
+
+.taskDiv .updateTask.complete {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.taskDiv .countdownTaskButton.complete {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.taskDiv .countdownTaskButton.clicked {
+  border: 2px solid white;
+} 
+
+.taskDiv .checklistDiv.complete {
+  pointer-events: none;
+}
+
+.taskDiv.complete {
+  border: 2px solid #00E676;
+  background-color: rgb(0, 230, 118, 0.2);
+}
+
+.taskDiv .taskComplete.complete {
+  border: 2px solid white;
 }
