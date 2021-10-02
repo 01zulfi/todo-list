@@ -1,3 +1,4 @@
+import todoListIcon from "../icons/todoListIcon.svg";
 import projectAddIcon from "../icons/projectAddIcon.svg";
 import { DOMFactory } from "./FactoryFunctions.js";
 import { pubsub } from "./Pubsub.js";
@@ -15,6 +16,7 @@ const initDisplayObject = {
         this.bindEvents();
     },
     createElements: function() {
+        this.favicon = DOMFactory('link', {type: "image/png", rel: "icon", href: todoListIcon});
         this.menuAndTitleDiv = DOMFactory('div', {className: "menuAndTitleDiv"});
         this.appTitleDiv = DOMFactory('div');
         this.title = DOMFactory('h2', {className: "appTitle", textContent:"T O D O"});
@@ -30,6 +32,7 @@ const initDisplayObject = {
         this.headerText = DOMFactory('h1', {className: "headerText", textContent: "Home"});
     },
     appendContent: function() {
+        document.head.append(this.favicon);
         this.addProjectButton.append(this.projectAddIcon);
         this.appTitleDiv.append(this.title);
         this.sidebarMain.append(this.homeSidebar, this.taskSidebar, this.projectSidebar);
