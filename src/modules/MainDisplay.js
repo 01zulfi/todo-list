@@ -1,4 +1,6 @@
-import projectCompleteIcon from "../icons/projectCompleteIcon.svg"
+import taskAddIcon from "../icons/taskAddIcon.svg";
+import projectCompleteIcon from "../icons/projectCompleteIcon.svg";
+import projectDeleteIcon from "../icons/projectDeleteIcon.svg";
 import { DOMFactory } from "./FactoryFunctions.js";
 import { createTaskForm } from "./InitDisplay.js";
 import { pubsub } from "./Pubsub.js";
@@ -64,38 +66,46 @@ function deleteProjectSidebar(projectTitle) {
 function createProjectDOM(project) {
     const main = document.querySelector('.main');
     const projectSection = DOMFactory('section', {"data-id": project.id, className: "projectSection"});
-    if (project.done) {
-        projectSection.style.opacity = 0.5;
-    } else {
-        projectSection.style.opacity = 1;
-    }
+    const projectButtonContainer = DOMFactory('div', {className: "projectButtonContainer"});
+    // if (project.done) {
+    //     projectSection.style.opacity = 0.5;
+    // } else {
+    //     projectSection.style.opacity = 1;
+    // }
     let projectHeading;
     let addTaskInProjectButton;
     let completeProjectButton;
     let deleteProjectButton;
     let completeProjectIcon;
+    let addTaskInProjectIcon = DOMFactory('img', {src: taskAddIcon});
+    let deleteProjectIcon;
     if (project.title === "All Tasks") {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: ""});
-        addTaskInProjectButton = DOMFactory('button', {className: "addTaskInPRoject",
+        addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProject",
                                                              textContent: `Add Task`});
+        addTaskInProjectButton.append(addTaskInProjectIcon);                             
     } else {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
         addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProject",
-                                                             textContent: `Add Task in ${project.title}`});
+                                                             textContent: `Add`});
         completeProjectButton = DOMFactory('button', {className: "completeProjectButton",
                                                         textContent: "Complete"});
         completeProjectIcon = DOMFactory('img', {src: projectCompleteIcon});
+        deleteProjectIcon = DOMFactory('img', {src: projectDeleteIcon});
         completeProjectButton.append(completeProjectIcon);
-        deleteProjectButton = DOMFactory('button', {className: "deleteProjectButton", textContent: "Delete Project"});
-        completeProjectButton.addEventListener('click', (e) => pubsub.publish('toggleCompleteProject',
-        e.target.parentNode.getAttribute("data-id")))
+        deleteProjectButton = DOMFactory('button', {className: "deleteProjectButton", textContent: "Delete"});
+        deleteProjectButton.append(deleteProjectIcon);
+        addTaskInProjectButton.append(addTaskInProjectIcon);
+        completeProjectButton.addEventListener('click', (event) => {
+            pubsub.publish('toggleCompleteProject', event.target.parentNode.parentNode.getAttribute("data-id"));
+        })
         deleteProjectButton.addEventListener('click', (e) => {
-            pubsub.publish('deleteProject', e.target.parentNode.getAttribute('data-id'));
-            e.target.parentNode.remove();
+            pubsub.publish('deleteProject', e.target.parentNode.parentNode.getAttribute('data-id'));
+            e.target.parentNode.parentNode.remove();
         })
     }
-
-    projectSection.append(projectHeading, addTaskInProjectButton, completeProjectButton || "", deleteProjectButton || "");
+    projectButtonContainer.append(addTaskInProjectButton, completeProjectButton || "", deleteProjectButton || "")
+    projectSection.append(projectHeading, projectButtonContainer);
     main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
@@ -103,7 +113,11 @@ function createProjectDOM(project) {
         const formSection = createTaskForm(this.parentNode.getAttribute('data-id'));
         this.parentNode.append(formSection);
     }
-    if (project.taskArray.length !== 0) displayTasks(project)
+    if (project.taskArray.length !== 0) {
+        displayTasks(project)
+    } else {
+        completeProjectDOM(project);
+    }
 }
 
 function clearSections() {
@@ -122,6 +136,7 @@ function displayTasks(project) {
         taskContainer.append(createTaskCard(task));
     }
     projectSection.append(taskContainer);
+    completeProjectDOM(project);
 }
 
 function deleteAllTasks(projectSection) {
@@ -279,11 +294,21 @@ function completeTaskDOM(task) {
 }
 
 function completeProjectDOM(project) {
+    if (project.title === "All Tasks") return
     const projectSection = document.querySelector(`[data-id="${project.id}"]`);
+    const addTaskInProjectButton = projectSection.querySelector('.addTaskInProject');
+    const completeProjectButton = projectSection.querySelector('.completeProjectButton');
+    const taskContainer = projectSection.querySelector('.taskContainer');
     if (project.done) {
-        projectSection.style.opacity = 0.5;
+        projectSection.classList.add('complete');
+        addTaskInProjectButton.classList.add('complete');
+        completeProjectButton.classList.add('complete');
+        if (taskContainer !== null) taskContainer.classList.add('complete');
     } else {
-        projectSection.style.opacity = 1;
+        projectSection.classList.remove('complete');
+        addTaskInProjectButton.classList.remove('complete');
+        completeProjectButton.classList.remove('complete');
+        if (taskContainer !== null) taskContainer.classList.remove('complete');
     }
 }
 

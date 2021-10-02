@@ -1,3 +1,4 @@
+import projectAddIcon from "../icons/projectAddIcon.svg";
 import { DOMFactory } from "./FactoryFunctions.js";
 import { pubsub } from "./Pubsub.js";
 
@@ -17,18 +18,19 @@ const initDisplayObject = {
         this.menuAndTitleDiv = DOMFactory('div', {className: "menuAndTitleDiv"});
         this.appTitleDiv = DOMFactory('div');
         this.title = DOMFactory('h2', {className: "appTitle", textContent:"T O D O"});
-        //this.menuButton = DOMFactory('button', {className: "menuButton", textContent: "Menu"});
         this.sidebarMain = DOMFactory('div', {className: "sidebarMain"});
         this.homeSidebar = DOMFactory('div', {className: 'sidebarDiv selected', id: "homeSidebar", textContent: 'Home'});
         this.taskSidebar = DOMFactory('div', {className: 'sidebarDiv', id: "taskSidebar",textContent: 'Tasks'});
         this.projectSidebar = DOMFactory('div', {className: "sidebarDiv", id: "projectSidebar", textContent: "Projects"});
-        this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: " + | Add Project"});
+        this.addProjectButton = DOMFactory('button', {className: "addProjectButton", textContent: "Add Project"});
+        this.projectAddIcon = DOMFactory('img', {src: projectAddIcon});
         this.newProjectSidebar = DOMFactory('div', {className: 'newProjectSidebar'})
         this.main = DOMFactory('div', {className: "main"});
         this.header = DOMFactory('div', {className: "header"});
         this.headerText = DOMFactory('h1', {className: "headerText", textContent: "Home"});
     },
     appendContent: function() {
+        this.addProjectButton.append(this.projectAddIcon);
         this.appTitleDiv.append(this.title);
         this.sidebarMain.append(this.homeSidebar, this.taskSidebar, this.projectSidebar);
         this.menuAndTitleDiv.append(this.appTitleDiv, this.sidebarMain, this.addProjectButton, this.newProjectSidebar);
