@@ -24,6 +24,7 @@ button {
   align-items: center;
   flex-direction: row-reverse;
   gap: 3px;
+  cursor: pointer;
 }
 
 .main {
@@ -187,15 +188,24 @@ form button {
 }
 
 .inputTaskChecklistDiv {
-  overflow: scroll;
+  overflow-y: scroll;
   height: 20vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.inputTaskChecklistDiv div {
+  display: flex;
 }
 
 .inputTaskChecklistDiv button {
   background-color: #CE93D8;
   color: black;
+}
+
+.inputTaskChecklistDiv button:hover {
+  background-color: #F06292;
 }
 
 input, textarea {
@@ -223,6 +233,8 @@ input, textarea {
   background-color: rgba(255,255,255,0.07);
   margin: 1vh;
   width: 95%;
+  display: flex;
+  flex-direction: column;
 }
 
 .taskDiv h3 {
@@ -282,9 +294,23 @@ input, textarea {
   color:#F5F5F5;
 }
 
+.taskDiv .taskDesc {
+  opacity: 0.85;
+}
+
 .taskButtonContainer {
   display: flex;
   justify-content: space-evenly;
+  margin-top: auto;
+}
+
+.taskButtonContainer button:hover {
+  background-color: #00BFA5;
+  cursor: pointer;
+}
+
+.taskButtonContainer button.deleteTask:hover {
+  background-color: #E53935;
 }
 
 .projectSection {
@@ -294,7 +320,17 @@ input, textarea {
   border-radius: 7px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 95%;
+}
+
+.projectSection .projectDesc {
+  background-color: rgba(255,255,255,0.07);
+  width: 95%;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .projectSection h2 {
@@ -305,6 +341,7 @@ input, textarea {
 .projectSection.complete {
   border: 2px solid #A5D6A7;
   opacity: 0.9;
+  background-color: rgba(168, 255, 235, 0.3);
 }
 
 .projectButtonContainer {
@@ -313,6 +350,14 @@ input, textarea {
 
 .projectButtonContainer button {
   font-size: 20px;
+}
+
+.projectButtonContainer button:hover {
+  background-color: #3D00E0;
+}
+
+.projectButtonContainer button.deleteProjectButton:hover {
+  background-color: #E53935;
 }
 
 .countdownDiv {
@@ -395,4 +440,93 @@ input, textarea {
 
 .taskDiv .taskComplete.complete {
   border: 2px solid white;
+}
+
+.sidebarDiv:hover {
+  background-color: rgba(255,255,255,0.11);
+  cursor: pointer;
+}
+
+.addProjectButton:hover {
+  background-color: #3D00E0;
+}
+
+.newProjectSidebar div:hover {
+  cursor: pointer;
+  background-color: #455A64;
+}
+
+.formModal span:hover {
+  cursor: pointer;
+  background-color: #F44336;
+}
+
+form #submitButtonTask:hover, form #submitButtonProject:hover {
+  background-color: #3D00E0;
+}
+
+@media only screen and (min-width: 768px) {
+  body {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .menuAndTitleDiv {
+    width: 25%;
+    margin-left: 5px;
+    font-size: 20px;
+  }
+  .sidebarMain {
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    font-size: 17px;
+  }
+  .addProjectButton {
+    font-size: 17px;
+  }
+  .newProjectSidebar {
+    flex-direction: column;
+  }
+  .newProjectSidebar div {
+    width: 100%;
+    max-width: none;
+    padding: 3px;
+    font-size: 17px;
+  }
+  form {
+    width: 45%;
+    font-size: 17px;
+  }
+  .formModal h2 {
+    width: 45%;
+    font-size: 20px;
+  }
+  .main {
+    justify-content: baseline;
+    align-items: flex-start;
+  }
+  .main .header {
+    margin-left: 2vh;
+  }
+  .main .projectSection {
+    width: fit-content;
+  }
+  .projectButtonContainer button {
+    font-size: 17px;
+  }
+  .taskContainer {
+    align-items: baseline;
+  }
+  .taskDiv {
+    min-height: 28vh;
+    height: fit-content;
+    width: fit-content;
+    min-width: 15vw;
+  }
+  .taskDiv h3 {
+    font-size: 20px;
+  }
+  .taskDiv div, .taskDiv p {
+    font-size: 17px;
+  }
 }

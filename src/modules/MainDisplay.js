@@ -79,6 +79,7 @@ function createProjectDOM(project) {
     let completeProjectIcon;
     let addTaskInProjectIcon = DOMFactory('img', {src: taskAddIcon});
     let deleteProjectIcon;
+    let projectDesc;
     if (project.title === "All Tasks") {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: ""});
         addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProject",
@@ -86,6 +87,7 @@ function createProjectDOM(project) {
         addTaskInProjectButton.append(addTaskInProjectIcon);                             
     } else {
         projectHeading = DOMFactory('h2', {className: "projectHeading", textContent: project.title});
+        projectDesc = DOMFactory('p', {className: "projectDesc", textContent: project.description});
         addTaskInProjectButton = DOMFactory('button', {className: "addTaskInProject",
                                                              textContent: `Add`});
         completeProjectButton = DOMFactory('button', {className: "completeProjectButton",
@@ -101,11 +103,11 @@ function createProjectDOM(project) {
         })
         deleteProjectButton.addEventListener('click', (e) => {
             pubsub.publish('deleteProject', e.currentTarget.parentNode.parentNode.getAttribute('data-id'));
-            e.target.parentNode.parentNode.remove();
+            e.currentTarget.parentNode.parentNode.remove();
         })
     }
     projectButtonContainer.append(addTaskInProjectButton, completeProjectButton || "", deleteProjectButton || "")
-    projectSection.append(projectHeading, projectButtonContainer, taskContainer);
+    projectSection.append(projectHeading, projectDesc || "", projectButtonContainer, taskContainer);
     main.append(projectSection);
     addTaskInProjectButton.addEventListener('click', openForm);
     function openForm() {
