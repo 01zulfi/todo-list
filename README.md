@@ -1,14 +1,14 @@
 <h1 align="center"><strong>Todo List</strong></h1>
 
 ## About the Project
-<hr>
+
 
 A simple app to keep track of tasks and projects. <br>
 
 Written in HTML, CSS and Plain JavaScript. Bundled with Webpack. Library used: date-fns.
 
 ## Features
-<hr>
+
 <ul>
     <li>Create tasks and display their information</li>
     <li>Ability to create checklists for tasks</li>
