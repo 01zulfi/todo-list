@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xari4808/todo-list.git"
+    "url": "git+https://github.com/01zulfi/todo-list.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xari4808/todo-list/issues"
+    "url": "https://github.com/01zulfi/todo-list/issues"
   },
-  "homepage": "https://github.com/xari4808/todo-list#readme",
+  "homepage": "https://github.com/01zulfi/todo-list#readme",
   "devDependencies": {
     "css-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
