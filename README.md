@@ -5,6 +5,8 @@
 
 A simple app to keep track of tasks and projects. <br>
 
+Checkout the live version [here](https://01zulfi.github.io/todo-list/).
+
 Written in HTML, CSS and Plain JavaScript. Bundled with Webpack. Library used: date-fns.
 
 ## Features
